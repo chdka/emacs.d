@@ -22,10 +22,15 @@
 
 ;;; Description:
 
-;;
+;; This file sets some basic settings.
 
 ;;; Code:
 
+;; Set to a sane startup folder
+;; (more important when emacsserver is used)
+(cd (expand-file-name "~"))
 
+;; Pull in ./chdka-lisp/*
+(add-to-list 'load-path (expand-file-name "chdka-lisp" user-emacs-directory))
 
 ;;; init.el ends here
