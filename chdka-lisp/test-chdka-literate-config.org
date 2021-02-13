@@ -1,0 +1,202 @@
+#+title: Test for chdka literate config
+#+author: Christian Dijkstra
+#+email: chdka@public-files.de
+#+todo: DISABLED | ACTIVE
+
+* Introduction
+
+This file is used to test my routines for the literate configuration.
+By adding the =TODO= keywords *DISABLED* and *ACTIVE* to the heading of this file, 
+is it possible to get a visual feedback if something is active or not.
+
+By using *DISABLED* in the TODO/UNFINISHED state, it is displayed in the default color RED
+By using *ACTIVE* in the DONE/FINISHED state, it is displayed in the default color GREEN
+
+This state has an effect on the whole heading and subheadings.
+
+Another option is to add *:tangling no* to the sourcecode block. When this is provided the source
+will not be tangled.
+
+** Resulting =test-chdka-literate-config.el=
+
+The result of tangling of this file is included here.
+Notice the *:tangle no* here.
+
+#+include: test-chdka-literate-config.el src emacs-lisp :tangle no
+
+
+* The tests and examples
+
+In this section I'll try recreate some examples, to test the functionality of the
+literate configuration.
+
+** Test 1. One sourcecode block
+
+This test writes a message: 
+: test 1. succeeded
+
+#+begin_src emacs-lisp
+
+;; test 1. when tangled this test has succeeded
+(message "test 1. succeeded")
+
+#+end_src
+
+
+** ACTIVE Test 2. One sourcecode block in ACTIVE state heading
+
+This test writes a message:
+: test 2. succeeded
+
+#+begin_src emacs-lisp
+
+;; test 2. when tangled this test has succeeded
+(message "test 2. succeeded")
+
+#+end_src
+
+
+** DISABLED Test 3. One sourcecode block in DISABLED state heading
+
+This test should not write anything, if it does. It writes
+: test 3. failed
+
+#+begin_src emacs-lisp
+
+;; test 3. when tangled this test has failed
+(message "test 3. failed")
+
+#+end_src
+
+
+** Test 4. One sourcecode block with :tangle no
+
+This test should not write anything, if it does. It writes
+: test 4. failed
+
+#+begin_src emacs-lisp :tangle no
+
+;; test 4. when tangled this test has failed
+(message "test 4. failed")
+
+#+end_src
+
+
+** Test 5. One sourcecode block with :tangle yes
+
+This test should write
+: test 5. succeeded
+
+#+begin_src emacs-lisp :tangle yes
+
+;; test 5. when tangled this test has succeeded
+(message "test 5. succeeded")
+
+#+end_src
+
+
+** DISABLED Test 6. One sourcecode block with :tangle yes and heading in DISABLE state
+
+This test should write nothing. When something is written this test has failed
+: test 6. failed
+
+#+begin_src emacs-lisp :tangle yes
+
+;; test 6. when tangled this test has failed
+(message "test 6. failed")
+
+#+end_src
+
+
+** Test 7. Two sourcecode blocks
+
+This test should write two messages.
+: test 7. block a succeeded
+: test 7. block b succeeded
+
+#+begin_src emacs-lisp
+
+;; test 7. when tangled this part has succeeded
+(message "test 7. block a succeeded")
+
+#+end_src
+
+Here comes block b
+
+#+begin_src emacs-lisp
+
+;; test 7. when tangled this part has succeeded
+(message "test 7. block b succeeded")
+
+#+end_src
+
+
+** Test 8. Two sourcecode blocks where 1st block has :tangle no
+
+This test should write one message,
+: test 8. block a failed
+: test 8. block b succeeded
+
+#+begin_src emacs-lisp :tangle no
+
+;; test 8. when tangled this part has failed
+(message "test 8. block a failed")
+
+#+end_src
+
+Here comes block b
+
+#+begin_src emacs-lisp
+
+;; test 8. when tangled this part has succeeded
+(message "test 8. block b succeeded")
+
+#+end_src
+
+
+** Test 9. Two sourcecode blocks in separate sub heading
+
+This test should write the following message:
+: test 9. block a succeeded
+: test 9.1. block b succeeded
+
+#+begin_src emacs-lisp
+
+;; test 9. when tangled this part has succeeded
+(message "test 9. block a succeeded")
+
+#+end_src
+
+*** Test 9.1. Block b
+
+This should add the 9.1 message
+
+#+begin_src emacs-lisp
+
+;; test 9.1. when tangled this part has succeeded
+(message "test 9.1. block b succeeded")
+
+#+end_src
+
+** DISABLED Test 10. This heading DISABLED state, subheading ACTIVE state
+
+This should not write anything
+: test 10. failed
+
+#+begin_src emacs-lisp
+
+;; test 10. When tangled this part has failed
+(message "test 10. failed")
+
+#+end_src
+
+*** Test 10.1 This should also not write anything
+
+This should not write anything
+
+#+begin_src emacs-lisp
+
+;; test 10.1. when tangled this part has failed
+(message "test 10.1. failed")
+
+#+end_src
