@@ -55,6 +55,12 @@
 ;; ----------------------------------
 (message "init.el @ MAIN..")
 
+(if (not (require 'chdka-literate-config nil t))
+    (message "init.el @ MAIN - 'chdka-literate-config' not found")
+  (message "init.el @ MAIN - chdka-literate-config..\n")
+  (chdka-lc-load-config-file "chdka-emacs.org")
+  )
+
 
 ;; FINALIZE: turn debugging off
 ;; ----------------------------

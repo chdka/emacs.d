@@ -1,0 +1,18 @@
+#+title: My Literate Emacs Configuration
+#+author: Christian Dijkstra
+#+email: chdka@public-files.de
+#+todo: DISABLED | ACTIVE
+
+* Introduction
+
+* Gui
+
+** Buffer settings
+
+** File handling
+
+* Org-mode
+
+** Org-agenda
+
+** Org-capture
