@@ -4,6 +4,7 @@
 /straight/*
 /server/*
 /transient/*
+/eshell/*
 
 # Exclude files
 *~
