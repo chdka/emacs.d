@@ -1,6 +1,7 @@
 ;;; init.el --- -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021  Christian Dijkstra <chdka@public-files.de>
+;; Copyright (C) 2021
+;; Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
 ;; Package-requires: ((emacs "27.1"))
@@ -26,11 +27,49 @@
 
 ;;; Code:
 
+;; STARTUP: set some debugging and variables
+;; -----------------------------------------
+(message "init.el @ STARTUP..")
+
+(if (version< emacs-version "27.1")
+    (progn (message "init.el @ STARTUP - load early-init.el (emacs-version < 27.1)...\n")
+	   (if (load (expand-file-name "early-init.el" user-emacs-directory) 'missing-ok  )
+	       (message "\ninit.el @ STARTUP - load early-init.el succeeded\n")
+	     (message "init.el @ STARTUP - load early-init.el failed\n")))
+  (message "init.el @ STARTUP - early-init.el already loaded..."))
+
+
+;; PATH DEFAULTS: set some default loading paths and current dir
+;; -------------------------------------------------------------
+(message "init.el @ PATH DEFAULTS..")
+
 ;; Set to a sane startup folder
 ;; (more important when emacsserver is used)
 (cd (expand-file-name "~"))
 
 ;; Pull in ./chdka-lisp/*
 (add-to-list 'load-path (expand-file-name "chdka-lisp" user-emacs-directory))
+
+
+;; MAIN: start the main configuration
+;; ----------------------------------
+(message "init.el @ MAIN..")
+
+
+;; FINALIZE: turn debugging off
+;; ----------------------------
+(message "init.el @ FINALIZE..")
+
+;; Startup timing results
+(message "\nStart up time %.2fs\n"
+	 (float-time (time-subtract (current-time) chdka-early-init--emacs-start-time)))
+
+(setq debug-on-error nil
+      debug-on-quit nil)
+
+
+;; END:
+;; ----
+(message "init.el @ END.\n")
 
 ;;; init.el ends here
