@@ -1,6 +1,7 @@
 ;;; early-init.el --- -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021  Christian Dijkstra <chdka@public-files.de>
+;; Copyright (C) 2021
+;; Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
 ;; Package-requires: ((emacs "27.1"))
@@ -27,6 +28,22 @@
 
 ;;; Code:
 
+;; STARTUP: set some debugging and initialize some variables
+;; ---------------------------------------------------------
+(message "early-init.el @ STARTUP..")
+
+(setq debug-on-error t
+      debug-on-quit t)
+
+;; Startup timing
+(defvar chdka-early-init--emacs-start-time (current-time)
+  "Time when Emacs was started")
+
+
+;; PACKAGE CONFIGURATION: bootstrap straight.el
+;; --------------------------------------------
+(message "early-init.el @ PACKAGE CONFIGURATION straight.el...")
+
 ;; prevent package.el loading packages, this is handled via straight.el
 ;; and use-package
 (setq package-enable-at-startup nil)
@@ -49,11 +66,19 @@
 (straight-use-package 'use-package)
 
 
+;; GUI: Initialize some GUI elements
+;; ---------------------------------
+(message "early-init.el @ GUI..")
+
 ;; Initialize GUI elements
 (menu-bar-mode 1)
 (tool-bar-mode -1)
 (scroll-bar-mode 1)
 (setq inhibit-splash-screen t)
 
+
+;; END: 
+;; ----
+(message "early-init.el @ END.\n")
 
 ;;; early-init.el ends here
