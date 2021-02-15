@@ -1,18 +1,178 @@
 #+title: My Literate Emacs Configuration
 #+author: Christian Dijkstra
 #+email: chdka@public-files.de
-#+todo: DISABLED | ACTIVE
+#+startup: noptag indent content
+#+todo: DISABLED(d) | ENABLED(e)
+#+todo: BUG(b) FEATURE(f) | FIXED(x)
+#+tags: @behaviour(b) @ui(u)
+#+tags: { issue(i) feature(f) }
+
+* LICENSE
+I've chosen GPLv3, because most of the information and snippets I use are also licensed under GPLv3.
+
+#+begin_src emacs-lisp
+
+;; Copyright (C) 2021
+;; Christian Dijkstra <chdka@public-files.de>
+
+;; Author: Christian Dijkstra <chdka@public-files.de>
+;; Package-requires: ((emacs "27.1"))
+
+;; This file is part of my Emacs configuration
+
+;; This file is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#+end_src
 
 * Introduction
+This is /My Literate Emacs Configuration/.
+It is build upon snippets I've found on the web and my personal preference for the functionality of things.
 
-* Gui
+** Needed elisp file
+To use this literate configuration I've created a set of elisp functions defined in:
 
-** Buffer settings
+#+include: "~/.config/emacs/chdka-lisp/chdka-literate-config.el" src emacs-lisp :tangle no
 
-** File handling
+This file is part of this repository.
 
-* Org-mode
+** Usage of the TODO keywords
+I've defined two sets of keywords
 
-** Org-agenda
+- DISABLED | ENABLED :: When the value is *DISABLED*, this heading is not tangled / exported to the =chdka-emacs.el= file. Currently there is an issue with this keyword
+- BUG FEATURE | FIXED :: When a heading is set to *BUG*, *FEATURE* it is an indicator something has to be corrected, but at this moment I do not know how exactly.
 
-** Org-capture
+** Usage of the TAGS
+I've define a set of tags, which are a controlled vocabulari in this file.
+Following is a description of the tags and the meaning for them.
+
+- @behaviour :: the setting here has an effect on the functionality, but is not necessarily visual. e.g. the setting for auto-revert-mode
+- @ui :: the setting here has an effect on the user interface, but is not directly a functionality change. e.g. blinking of the cursor
+
+The following list is a mutual exclusive list, meaning only one can be selected via the chords =C-c C-q= or =C-c C-c=
+- issue :: this indicates an issue which needs to be resolved
+- feature :: this is a feature request, e.g. implement / add a package
+
+* Known issues and needed features for this configuration
+This section is a summary of known issues and feature requests for this configuration.
+
+** BUG The *DISABLED* state is not inherited to the subheadings :@behaviour:issue:
+Currently there is an issue, when a heading has a *DISABLED* state the subheading is still processed, a workaround for this is to add =:tangle no= to the sourcecode block.
+This has to be resolved in the function =chdka-lc-tangle-config-file=.
+
+** FIXED Make it possible for a distinction between *WORK* and *PERSONAL* device :feature:
+My agenda functionality is different for my *PERSONAL* environment vs my *WORK* environment.
+
+#+begin_src emacs-lisp :tangle no
+(getenv "CHDKA_DEVICE")
+#+end_src
+
+#+RESULTS:
+: OWN
+
+* Configuration starts here
+Set some defaults prior loading other packages and initialisations.
+
+** Default system-wide settings
+In this section some simple default settings which are system-wide for the emacs configuration
+
+*** Set constant if device is my *OWN* or *WORK*
+For this purpose I've created an environment variable =CHDKA_DEVICE= which holds the following values:
+- OWN :: this is my personal device / computer / laptop
+- WORK :: this is my work laptop
+
+#+begin_src emacs-lisp
+(defconst chdka-emacs-const-is-own-device
+  (string-suffix-p "OWN" (getenv "CHDKA_DEVICE") t)
+  "This pseudo constant indicates if my current configuration is running on my personal device,
+or if it is running on my work device")
+#+end_src
+
+#+RESULTS:
+: chdka-emacs-const-is-own-device
+
+*** Set an alias to y/n                                        :@behaviour:
+Enable y/n instead of yes/no
+
+#+begin_src emacs-lisp
+;; fset is used vs defalias, fset is global where defalias registered to the loaded file
+;; lisp file
+;; - [https://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Functions.html]
+;; - [https://www.reddit.com/r/emacs/comments/4fzgdn/what_difference_there_is_between_defalias_and_fset/]
+(fset 'yes-or-no-p 'y-or-n-p) 
+#+end_src
+
+*** Customization in its own file                              :@behaviour:
+Write customization into its own file
+
+#+begin_src emacs-lisp
+(setq-default custom-file (expand-file-name "chdka-custom.el" user-emacs-directory))
+#+end_src
+
+And load this file
+
+#+begin_src emacs-lisp
+(when (file-exists-p custom-file)
+  (load custom-file t))
+#+end_src
+
+*** Buffer settings
+**** Auto revert of the buffer                                :@behaviour:
+This settings change the behaviour of Emacs when a file is changed
+
+#+begin_src emacs-lisp
+(global-auto-revert-mode 1)                   ; auto update buffer if a file changes
+(add-hook 'dired-mode-hook 'auto-revert-mode) ; auto refresh dired when file changes
+#+end_src
+
+**** Encoding for saving buffer                               :@behaviour:
+Write the files in UTF-8 and even in UTF-8-UNIX when possible
+
+#+begin_src emacs-lisp
+(setq-default locale-coding-system 'utf-8
+              buffer-file-coding-system 'utf-8-unix
+	      default-buffer-file-coding-system 'utf-8-unix)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8-unix)
+(when (eq system-type 'windows-nt)
+  (set-clipboard-coding-system 'utf-16le-dos))
+#+end_src
+
+**** Performance issues on Windows when pasting unicode text  :@behaviour:
+Sometime when you paste unicode text in Emacs it responds very slow
+
+#+begin_src emacs-lisp
+;; https://www.reddit.com/r/emacs/comments/8v4v7o/why_is_emacs_so_slow_on_windows/
+;; sometime with pasting unicode text emacs responds very slow.
+;; https://emacs.stackexchange.com/questions/33510/unicode-txt-slowness
+(when (eq system-type 'windows-nt)
+  (setq inhibit-compacting-font-caches t))
+#+end_src
+
+*** User Interface
+**** A more useful frame title                                       :@ui:
+Display the filename of the active buffer in the frame title.
+
+#+begin_src emacs-lisp
+(setq-default frame-title-format
+	      '((:eval (if (buffer-file-name)
+			   (abbreviate-file-name (buffer-file-name))
+			 "%b"))))
+#+end_src
+
+** Per packages
+*** Org-mode
+**** Org-agenda
+**** Org-capture

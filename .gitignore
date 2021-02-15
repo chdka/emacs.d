@@ -8,5 +8,6 @@
 
 # Exclude files
 *~
+chdka-custom.el
 chdka-emacs.el
 /chdka-lisp/test-chdka-literate-config.el
