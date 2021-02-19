@@ -4,7 +4,7 @@
 #+startup: noptag indent content
 #+todo: DISABLED(d) | ENABLED(e)
 #+todo: BUG(b) FEATURE(f) | FIXED(x)
-#+tags: @behaviour(b) @ui(u) env_var(v)
+#+tags: @behaviour(b) @ui(u) env_var(v) keymapping(k) hook(h)
 #+tags: { issue(i) feature(f) }
 
 * LICENSE
@@ -59,6 +59,8 @@ Following is a description of the tags and the meaning for them.
 - @behaviour :: the setting here has an effect on the functionality, but is not necessarily visual. e.g. the setting for auto-revert-mode
 - @ui :: the setting here has an effect on the user interface, but is not directly a functionality change. e.g. blinking of the cursor
 - env_var :: the setting here reads an environment variable which is defined outside of Emacs
+- keymapping :: the setting here defines a key mapping
+- hook :: the setting here defines a hook
 
 The following list is a mutual exclusive list, meaning only one can be selected via the chords =C-c C-q= or =C-c C-c=
 - issue :: this indicates an issue which needs to be resolved
@@ -81,6 +83,13 @@ My agenda functionality is different for my *PERSONAL* environment vs my *WORK* 
 #+RESULTS:
 : OWN
 
+** FEATURE Clean up some obsolete environment variables [0/2]      :env_var:
+One of those variables is =CHDKA_HOME_CONFIG_EMACS=. Now I use the =XDG_CONFIG_HOME= setting.
+This is possible since Emacs 27.1
+
+- [ ] CHDKA_HOME_CONFIG_EMACS
+- [ ] CHDKA_HOME_USER
+
 * /My Literate Configuration/ starts here
 Set some defaults prior loading other packages and initialisations.
 
@@ -91,38 +100,87 @@ I've mapped my =CAPSLOCK= as an extra =CTRL= key.
 This is implemented via an registry setting described as below
 
 #+begin_example
-  Windows Registry Editor Version 5.00
-  
-  [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
-  "Scancode Map"=hex:00,00,00,00,00,00,00,00,02,00,00,00,1d,00,3a,00,00,00,00,00
+Windows Registry Editor Version 5.00
 
-  ;;  explanation of the codes
-  ;
-  ;  Windows Registry Editor Version 5.00
-  ;
-  ; The hex data is in five groups of four bytes:
-  ;   00,00,00,00,\    header version (always 00000000)
-  ;   00,00,00,00,\    header flags (always 00000000)
-  ;   04,00,00,00,\    # of entries (3 in this case) plus a NULL terminator line.
-  ;                    Entries are in 2-byte pairs: Key code to send & keyboard key to send it.
-  ;                    Each entry is in LSB, MSB order.
-  ;   1d,00,3a,00,\    Send LEFT CTRL (0x001d) code when user presses the CAPS LOCK key (0x003a) 
-  ;   38,00,1d,00,\    Send LEFT ALT (0x0038) code when user presses the LEFT CTRL key (0x001d) 
-  ;   3a,00,38,00,\    Send CAPS LOCK (0x3A) code when user presses the LEFT ALT key (0x0038) 
-  ;   00,00,00,00      NULL terminator
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
+"Scancode Map"=hex:00,00,00,00,00,00,00,00,02,00,00,00,1d,00,3a,00,00,00,00,00
 
-  ;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
-  ;"Scancode Map"=hex:00,00,00,00,\
-  ;                   00,00,00,00,\
-  ;                   04,00,00,00,\
-  ;                   1d,00,3a,00,\
-  ;                   38,00,1d,00,\
-  ;                   3a,00,38,00,\
-  ;                   00,00,00,00
+;;  explanation of the codes
+;
+;  Windows Registry Editor Version 5.00
+;
+; The hex data is in five groups of four bytes:
+;   00,00,00,00,\    header version (always 00000000)
+;   00,00,00,00,\    header flags (always 00000000)
+;   04,00,00,00,\    # of entries (3 in this case) plus a NULL terminator line.
+;                    Entries are in 2-byte pairs: Key code to send & keyboard key to send it.
+;                    Each entry is in LSB, MSB order.
+;   1d,00,3a,00,\    Send LEFT CTRL (0x001d) code when user presses the CAPS LOCK key (0x003a) 
+;   38,00,1d,00,\    Send LEFT ALT (0x0038) code when user presses the LEFT CTRL key (0x001d) 
+;   3a,00,38,00,\    Send CAPS LOCK (0x3A) code when user presses the LEFT ALT key (0x0038) 
+;   00,00,00,00      NULL terminator
+
+;[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
+;"Scancode Map"=hex:00,00,00,00,\
+;                   00,00,00,00,\
+;                   04,00,00,00,\
+;                   1d,00,3a,00,\
+;                   38,00,1d,00,\
+;                   3a,00,38,00,\
+;                   00,00,00,00
 #+end_example
 
 ** Default system-wide settings in Emacs
 In this section some simple default settings which are system-wide for the emacs configuration
+
+*** Set file and path constants based on environment variables    :env_var:
+I have defined several environment variables on my personal system en work system.
+These variables are used to define files and paths, and to prevent personal information
+leaking from my configuration. e.g. username, computername etc.
+
+The naming convention is a prefix with =chdka-emacs--env-=.
+
+#+begin_src emacs-lisp
+
+(defconst chdka-emacs--env-device (getenv "CHDKA_DEVICE")
+   "Indicates if this device is my own device or work")
+
+(defconst chdka-emacs--env-emacs-home-beorg (expand-file-name (getenv "CHDKA_APP_EMACS_HOME_BEORG"))
+   "This the path to my files used via the iOS app Beorg")
+
+(defconst chdka-emacs--env-emacs-home-org (expand-file-name (getenv "CHDKA_APP_EMACS_HOME_ORG"))
+   "This is the path to my folder where i store my org files")
+
+(defconst chdka-emacs--env-home-cache (expand-file-name (getenv "CHDKA_HOME_CACHE"))
+   "This path is my equivalent of XDG_CACHE_HOME")
+
+(defconst chdka-emacs--env-home-config (expand-file-name (getenv "CHDKA_HOME_CONFIG"))
+   "This path is my equivalent of XDG_CONFIG_HOME")
+
+(defconst chdka-emacs--env-home-config-emacs (expand-file-name (getenv "CHDKA_HOME_CONFIG_EMACS"))
+   "This path points to the location where my emacs configuration is stored [DEPRECATED]")
+
+(defconst chdka-emacs--env-home-data (expand-file-name (getenv "CHDKA_HOME_DATA"))
+   "This path points to the location where my data is stored e.g. FireFox profile")
+
+(defconst chdka-emacs--env-home-logs (expand-file-name (getenv "CHDKA_HOME_LOGS"))
+   "This path points to the location where logs are stored of my personal scripts")
+
+(defconst chdka-emacs--env-home-projects (expand-file-name (getenv "CHDKA_HOME_PROJECTS"))
+   "This path points to the location where my programming projects are stored")
+
+(defconst chdka-emacs--env-home-user (expand-file-name (getenv "CHDKA_HOME_USER"))
+   "This path points to 'HOME' [DEPRECATED]")
+
+(defconst chdka-emacs--env-xdg-cache-home  (expand-file-name (getenv "XDG_CACHE_HOME")))
+(defconst chdka-emacs--env-xdg-config-home (expand-file-name (getenv "XDG_CONFIG_HOME")))
+(defconst chdka-emacs--env-xdg-data-home   (expand-file-name (getenv "XDG_DATA_HOME")))
+(defconst chdka-emacs--env-emacs-server-file (expand-file-name (getenv "EMACS_SERVER_FILE")))
+
+#+end_src
+
+#+RESULTS:
+: chdka-emacs--env-emacs-server-file
 
 *** Set constant if device is my *OWN* or *WORK*                  :env_var:
 For this purpose I've created an environment variable =CHDKA_DEVICE= which holds the following values:
@@ -130,14 +188,14 @@ For this purpose I've created an environment variable =CHDKA_DEVICE= which holds
 - WORK :: this is my work laptop
 
 #+begin_src emacs-lisp
-(defconst chdka-emacs-const-is-own-device
-  (string-suffix-p "OWN" (getenv "CHDKA_DEVICE") t)
+(defconst chdka-emacs--const-is-own-device
+  (string-suffix-p "OWN" chdka-emacs--env-device t)
   "This pseudo constant indicates if my current configuration is running on my personal device,
 or if it is running on my work device")
 #+end_src
 
 #+RESULTS:
-: chdka-emacs-const-is-own-device
+: chdka-emacs--const-is-own-device
 
 *** Confirm before exiting                                     :@behaviour:
 
@@ -175,15 +233,13 @@ And load this file
 
 *** Backup and Auto-save settings
 
-**** Assign a backup and auto-save folder             :@behaviour:env_var:
+**** Assign a backup and auto-save folder                     :@behaviour:
 Stop Emacs littering all my folders with backup files and auto-save files.
 Assign a folder for them, and use a flat structure
 
 #+begin_src emacs-lisp
 (defconst chdka-emacs-const-backup-rootdir 
-          (if (getenv "CHDKA_HOME_CACHE")
-              (expand-file-name (concat (getenv "CHDKA_HOME_CACHE") "/emacs/backup/"))
-            (expand-file-name "~/.cache/emacs/backup/"))
+          (expand-file-name (concat chdka-emacs--env-home-cache "/emacs/backup/"))
   "Personal Emacs backup root.")
 
 (if (not (file-exists-p chdka-emacs-const-backup-rootdir))
@@ -197,9 +253,7 @@ Assign a folder for them, and use a flat structure
 
 #+begin_src emacs-lisp 
 (defconst chdka-emacs-const-autosave-rootdir
-          (if (getenv "CHDKA_HOME_CACHE")
-              (expand-file-name (concat (getenv "CHDKA_HOME_CACHE") "/emacs/auto-save/"))
-            (expand-file-name "~/.cache/emacs/auto-save/"))
+          (expand-file-name (concat chdka-emacs--env-home-cache "/emacs/auto-save/"))
   "Personal Emacs auto-save root.")
 
 (if (not (file-exists-p chdka-emacs-const-autosave-rootdir))
@@ -353,7 +407,194 @@ Therefore this code block is not tangled.
 
 
 
-** Per packages
+** Per package
 *** Org-mode
+**** Install =org-plus-contrib=
+
+#+begin_src emacs-lisp
+(straight-use-package 'org-plus-contrib)
+#+end_src
+
+**** Org-mode default settings                                :@behaviour:
+Set the folder for my org files, and prevent editing text which is not visible.
+
+#+begin_src emacs-lisp
+(setq org-directory chdka-emacs--env-emacs-home-org
+      org-catch-invisible-edits 'error           ; prevent editing invisible text
+      org-use-fast-todo-selection t
+      org-treat-S-cursor-todo-selection-as-state-change nil
+      )
+#+end_src
+
+#+RESULTS:
+
+**** TODO keywords and state triggers                         :@behaviour:
+
+#+begin_src emacs-lisp
+;; sequence for Final Version Perfected (FVP) variant
+;; contains some old sequences (complete words e.g. TODO NEXT ...
+;; meaning of my symbols:
+;;     .T. : TODO
+;;     .I. : INTERRUPT, urgent
+;;     .P. : PROGRESS, working on
+;;     .N. : NEXT
+;;     .W. : WAITING
+;;     .D. : DONE
+;;     .C. : CANCELLED
+;;     >>> : SCHEDULED MEETING :deprecated
+;;     >S> : SCHEDULED MEETING
+;;     <<< : VISITED MEETING   :deprecated
+;;     <V< : VISITED MEETING
+;;     >C< : CANCELLED MEETING
+
+(setq org-todo-keywords
+      (quote ((sequence ".T.(t!)" ".I.(i!)" ".P.(p@/!)" ".N.(n!)" ".W.(w@/!)" "|" ".D.(d)" ".C.(c)" )
+              (sequence ">S>(s@/!)" " >>>(>@/!)" "|" "<V<(v)" ">C<(x)" "<<<" )
+              )
+             )
+      )
+
+(setq org-todo-state-tags-triggers
+      (quote ((".T." ("dot") ("waiting") ("meeting"))
+              (".I." ("dot") ("waiting") ("urgent" .t) ("meeting"))
+              (".P." ("dot") ("waiting") ("progress" .t) ("meeting"))
+              (".N." ("dot" . t) ("waiting") ("meeting"))
+              (".W." ("dot") ("progress") ("urgent") ("waiting" .t))
+              (">>>" ("dot") ("meeting" .t) ("visited" ))
+              (done ("waiting") ("hold"))
+              (".D."  ("dot") ("waiting") ("meeting"))
+              ("<<<"  ("dot") ("meeting") ("visited"  .t))
+              )
+             )
+      ) 
+#+end_src
+
+**** Logging of state changes                                 :@behaviour:
+Activate logging of state changes.
+
+#+begin_src emacs-lisp
+(setq org-log-into-drawer t)
+(setq org-log-done (quote note))
+(setq org-log-reschedule (quote note))
+(setq org-log-redeadline (quote note))
+(setq org-log-delschedule (quote note))
+(setq org-log-deldeadline (quote note))
+(setq org-log-state-notes-insert-after-drawers nil)
+
+;; Setup log note templates. Add "to [new date]" in reschedule and redeadline
+(setq org-log-note-headings '((done        . "CLOSING NOTE %t")
+                              (state       . "State %-12s from %-12S %t")
+                              (note        . "Note taken on %t")
+                              (reschedule  . "Schedule changed on %t: %S -> %s")
+                              (delschedule . "Not scheduled, was %S on %t")
+                              (redeadline  . "Deadline changed on %t: %S -> %s")
+                              (deldeadline . "Removed deadline, was %S on %t")
+                              (refile      . "Refiled on %t")
+                              )
+      )
+#+end_src
+
 **** Org-agenda
-**** Org-capture
+
+***** Define an agenda view                                    :@ui:hook:
+Initialize my agenda view, this is my daily worklist
+
+#+begin_src emacs-lisp
+(setq calendar-week-start-day     1       ; monday is 1st day of week
+      org-agenda-start-on-weekday nil     ; 
+      org-agenda-span             2       ; show 2 days
+      org-agenda-start-day      "-0d"
+      ;; disable follow mode, use F in agenda view to follow
+      org-agenda-start-with-follow-mode nil
+      ;; do not show items with active date in global todo list
+      ;;  active date are between < and >
+      ;;  scheduled, deadline
+      org-agenda-todo-ignore-with-date nil)
+
+(setq org-agenda-custom-commands 
+      '(("n" "Agenda / .I. / .P. / .N. / .W."
+         ((agenda "" nil)
+          (todo ".I." nil)
+          (todo ".P." nil)
+          (todo ".N." nil)
+          (todo ".W." nil)
+          (todo ".T." nil))
+          nil)))
+
+;; disable visual line wrap for agenda buffer only
+(add-hook 'org-agenda-mode-hook (lambda ()
+                                  (visual-line-mode -1)
+                                  (toggle-truncate-lines 1)))
+#+end_src
+
+***** Add files to the agenda                                :@behaviour:
+
+#+begin_src emacs-lisp
+(setq org-agenda-files (list (expand-file-name (concat chdka-emacs--env-emacs-home-org "/GED/GED.org"))
+                             (expand-file-name (concat chdka-emacs--env-emacs-home-org "/GED/refile.org"))
+                             (expand-file-name (concat chdka-emacs--env-emacs-home-org "/GED/GED-work.org"))))
+#+end_src
+
+#+RESULTS:
+| d:/christian/Documents/MyOrg/GED/GED.org | d:/christian/Documents/MyOrg/GED/refile.org | d:/christian/Documents/MyOrg/GED/GED-work.org |
+
+***** Work related:  Outlook 2 Orgmode                       :@behaviour:
+I've made this very simple addon on MS Outlook to 'sync' my agenda with Org-agenda.
+This is only active on my work machine
+
+#+begin_src emacs-lisp
+(when (not chdka-emacs--const-is-own-device)
+   (setq org-agenda-file-regexp "\\`\\\([^.].*\\.org\\\|[0-9]\\\{8\\\}\\\(\\.gpg\\\)?\\\)\\'")
+   (add-to-list 'org-agenda-files (expand-file-name (concat chdka-emacs--env-emacs-home-org "/_ol2orgmode/")))
+  )
+#+end_src
+
+#+RESULTS:
+
+**** Org-capture and Org-Protocol
+I use org-capture and org-protocol at work for capturing information from
+ticket system, which is TopDesk. It is also useful for capturing information
+of websites.
+
+***** Activate =org-protocol=                                :@behaviour:
+#+begin_src emacs-lisp
+(require 'org-protocol)
+#+end_src
+
+
+**** Org-mode =hooks=                                               :hook:
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook #'visual-line-mode 1)
+(add-hook 'org-mode-hook #'org-indent-mode)
+
+;; removed this hook, it doesn't work correctly with org-roam
+;;
+;;(require 'org-id)
+;;
+;;(defun chdka-org-ids-to-headlines-in-file ()
+;;  "Add ID properties to all headlines in the current file which do not already have one."
+;;  (interactive)
+;;  (org-map-entries 'org-id-get-create))
+;;
+;;(add-hook 'org-mode-hook (lambda ()
+;;                           (add-hook 'before-save-hook
+;;                                     'chdka-org-ids-to-headlines-in-file nil
+;;                                     'local)
+;;                           )
+;;          )
+;;(add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
+#+end_src
+
+**** Org-mode =key mappings=                                  :keymapping:
+Set used key mappings for Org-mode, but are globally available
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c b") 'org-switchb)
+(global-set-key (kbd "C-c '") 'org-edit-src-code)
+(global-set-key (kbd "C-c i") 'org-id-copy) 
+#+end_src
+
