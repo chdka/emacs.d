@@ -557,10 +557,88 @@ ticket system, which is TopDesk. It is also useful for capturing information
 of websites.
 
 ***** Activate =org-protocol=                                :@behaviour:
+
 #+begin_src emacs-lisp
 (require 'org-protocol)
 #+end_src
 
+****** MS Windows - additional configuration
+On Windows we have to register this protocol handler
+
+#+begin_example
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\org-protocol]
+@="URL:org-protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\org-protocol\shell]
+
+[HKEY_CLASSES_ROOT\org-protocol\shell\open]
+
+[HKEY_CLASSES_ROOT\org-protocol\shell\open\command]
+@="\"D:\\MSYS2-64\\mingw64\\bin\\emacsclientw.exe\" \"%1\""
+#+end_example
+
+***** Configure =org-capture=                                :@behaviour:
+Add the files to the targets for refiling
+
+#+begin_src emacs-lisp
+(setq org-refile-targets '((nil :maxlevel . 4)
+                           (org-agenda-files :maxlevel . 4))
+      )
+
+(setq org-refile-use-outline-path 'file)
+(setq org-outline-path-complete-in-steps nil)
+(setq org-refile-allow-creating-parent-nodes 'confirm) 
+#+end_src
+
+#+RESULTS:
+: confirm
+
+***** Templates for =org-capture=                            :@behaviour:
+
+#+begin_src emacs-lisp
+;;; https://github.com/sprig/org-capture-extension
+
+(defun chdka-emacs--square-brackets-to-round-ones(string-to-transform)
+  "Transforms [ into ( and ] into ), other chars left unchanged."
+  (concat 
+  (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform))
+  )
+
+
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file+headline
+                                 (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Niet Tijdgebonden")
+               "* .T. %?\n") ; <-- add to my lisf of todo
+              ("i" "interrupt, urgent" entry (file+headline
+                                 (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Niet Tijdgebonden")
+               "* .I. %?\n") ; <-- add to my lisf of todo
+              ("n" "next" entry (file+headline
+                                 (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Niet Tijdgebonden")
+               "* .N. %?\n") ; <-- add to my list of todo, and start immediately
+              ("m" "meeting" entry (file+headline
+                                    (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Tijdgebonden")
+               "* >>> %?\n %^t") ; <-- add to my list of meetings.
+              
+              ; https://github.com/sprig/org-capture-extension
+              ("p" "protocol" entry (file+headline
+                                     (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Refile")
+               "* .T. %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?") ; <-- add from firefox to list
+              ("L" "protocol link" entry (file+headline
+                                     (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Refile")
+               "* .T. %?%(chdka-emacs--square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n")
+              )
+             )
+      )
+#+end_src
+
+#+RESULTS:
+| t | todo              | entry | (file+headline (lambda nil (concat chdka-emacs--env-emacs-home-org /GED/GED.org)) Niet Tijdgebonden) | * .T. %? |
+| i | interrupt, urgent | entry | (file+headline (lambda nil (concat chdka-emacs--env-emacs-home-org /GED/GED.org)) Niet Tijdgebonden) | * .I. %? |
+| n | next              | entry | (file+headline (lambda nil (concat chdka-emacs--env-emacs-home-org /GED/GED.org)) Niet Tijdgebonden) | * .N. %? |
+| m | meeting           | entry | (file+headline (lambda nil (concat chdka-emacs--env-emacs-home-org /GED/GED.org)) Tijdgebonden)      | * >>> %? |
 
 **** Org-mode =hooks=                                               :hook:
 
