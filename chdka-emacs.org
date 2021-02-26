@@ -374,6 +374,25 @@ Tabs in the buffer
 *** User Interface
 In this section default settings for the user interface
 
+**** Set the base fonts                                              :@ui:
+ 
+#+begin_src emacs-lisp :tangle yes
+
+(defvar chdka-emacs--font-height (if (> (x-display-pixel-width) 1920)
+                                     (+ 0 110)
+                                   (+ 0 90))
+   "This variable holds the font height, which is based on my display width and pixelcount")
+
+;; Main typeface
+(set-face-attribute 'default nil :family "Fantasque Sans Mono" :height chdka-emacs--font-height)
+;; Proportionately spaced typeface
+(set-face-attribute 'variable-pitch nil :family "Georgia" :height 1.0)
+;; Monospaced typeface
+(set-face-attribute 'fixed-pitch nil :family "Fantasque Sans Mono" :height 1.0)
+#+end_src
+
+#+RESULTS:
+
 **** A more useful frame title, display filename                     :@ui:
 Display the filename of the active buffer in the frame title.
 
@@ -676,3 +695,92 @@ Set used key mappings for Org-mode, but are globally available
 (global-set-key (kbd "C-c i") 'org-id-copy) 
 #+end_src
 
+*** Ivy - completion framework                                 :@behaviour:
+Install Ivy a completion framework
+
+#+begin_src emacs-lisp
+(use-package ivy
+  :straight t
+  :demand
+  :config
+  ;; add recent files to the switch-buffer
+  ;; current and total # in prompt
+  (setq ivy-use-virtual-buffers t
+        ivy-count-format "[%d/%d] ")
+  
+  ;; enable ivy-mode
+  (ivy-mode 1)
+  )   
+#+end_src
+
+#+RESULTS:
+: t
+
+*** Which key                                                  :@behaviour:
+Install which-key, this packages provides a completion for the key chords.
+Helpful when you forget wich key comes next.
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :straight t
+  :demand t
+  :config
+  (which-key-mode)
+  )
+#+end_src
+
+#+RESULTS:
+: t
+
+*** Markdown mode
+Install markdown mode of jblevins. https://jblevins.org/projects/markdown-mode/
+
+gfm-mode : Git Flavoured Markdown
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :straight t
+  :demand t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown")
+  )
+#+end_src
+
+*** Magit
+Install magit, there was an issue in the past so i had to install it from MELPA.
+This seems resolved.
+
+#+begin_src emacs-lisp
+(use-package magit
+  :straight t
+  :bind ("C-x g" . magit-status)
+)
+#+end_src
+
+#+RESULTS:
+: magit-status
+
+*** Modus themes                                                      :@ui:
+Install the modus themes of https://protesilaos.com/
+
+#+begin_src emacs-lisp
+(use-package modus-themes
+  :straight t
+  :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs nil)
+
+  ;; Load the theme files before enabling a theme
+  (modus-themes-load-themes)
+  :config
+  ;; Load the theme of your choice:
+  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+  :bind ("<f5>" . modus-themes-toggle))
+#+end_src
+
+#+RESULTS:
+: modus-themes-toggle
