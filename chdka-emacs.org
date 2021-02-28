@@ -767,20 +767,48 @@ This seems resolved.
 Install the modus themes of https://protesilaos.com/
 
 #+begin_src emacs-lisp
-(use-package modus-themes
-  :straight t
-  :init
-  ;; Add all your customizations prior to loading the themes
-  (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs nil)
+  (use-package modus-themes
+    :straight t
+    :init
+    ;; Add all your customizations prior to loading the themes
+    (setq modus-themes-slanted-constructs t
+          modus-themes-bold-constructs nil)
 
-  ;; Load the theme files before enabling a theme
-  (modus-themes-load-themes)
-  :config
-  ;; Load the theme of your choice:
-  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
-  :bind ("<f5>" . modus-themes-toggle))
+    ;; Load the theme files before enabling a theme
+    (modus-themes-load-themes)
+    :config
+    ;; Load the theme of your choice:
+    (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+    :bind ("<f5>" . modus-themes-toggle))
+
 #+end_src
 
 #+RESULTS:
 : modus-themes-toggle
+
+*** Deft
+Install deft a fork of https://github.com/jrblevin/deft
+
+My default extension is =md= because I integrate this with *1Writer* on iOS.
+
+#+begin_src emacs-lisp
+  (use-package deft
+    :straight (:type git :host github :repo "chdka/deft")
+    :bind ("<f8>" . deft)
+    :commands (deft)
+    :config (setq deft-directory  (expand-file-name "ChriszunNotities" chdka-emacs--env-emacs-home-org)
+                  deft-extensions '("md" "txt" "org")
+                  deft-default-extension "md" ; workaround, the default extension is not set properly
+                  deft-new-file-format "%Y%m%d-%H%M"
+                  )
+      )
+#+end_src
+
+#+RESULTS:
+: deft
+
+
+
+
+
+
