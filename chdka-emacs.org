@@ -1,4 +1,4 @@
-#+title: My Literate Emacs Configuration
+Sdeft#+title: My Literate Emacs Configuration
 #+author: Christian Dijkstra
 #+email: chdka@public-files.de
 #+startup: noptag indent content
@@ -89,6 +89,17 @@ This is possible since Emacs 27.1
 
 - [ ] CHDKA_HOME_CONFIG_EMACS
 - [ ] CHDKA_HOME_USER
+  
+** FEATURE Rename large =txt= file with to other extension         :feature:
+When using deft, it scans all files defined in =deft-extensions=.
+I'll like to include =txt= files also, due to large exports on my work system the hog and do not
+give knowledge, only information.
+
+- [ ] rename =txt= files to =tsv= (tab separated files)  or =csv= (comma separated files)
+  
+** FEATURE Add a tangle hook for my literate configuration    :hook:feature:
+Add a =hook= when a literate confige file is saved, it gets automatically tangled.
+Even an option to disable this
 
 * /My Literate Configuration/ starts here
 Set some defaults prior loading other packages and initialisations.
@@ -790,16 +801,27 @@ Install the modus themes of https://protesilaos.com/
 Install deft a fork of https://github.com/jrblevin/deft
 
 My default extension is =md= because I integrate this with *1Writer* on iOS.
+For my work situation my default extension is =org=, and ignore the =txt= extension.
+I've a lot large TXT files due to exports.
+
+Scan even the subdirectories of the deft folder
 
 #+begin_src emacs-lisp
   (use-package deft
     :straight (:type git :host github :repo "chdka/deft")
     :bind ("<f8>" . deft)
     :commands (deft)
-    :config (setq deft-directory  (expand-file-name "ChriszunNotities" chdka-emacs--env-emacs-home-org)
-                  deft-extensions '("md" "txt" "org")
-                  deft-default-extension "md" ; workaround, the default extension is not set properly
-                  deft-new-file-format "%Y%m%d-%H%M"
+    :config (if chdka-emacs--const-is-own-device
+                ; it is my own device
+                (setq deft-directory  (expand-file-name "ChriszunNotities" chdka-emacs--env-emacs-home-org)
+                      deft-extensions '("md" "txt" "org")
+                      deft-default-extension "md") ; workaround, the default extension is not set properly
+              ; it is my work device
+              (setq deft-directory  (expand-file-name "_orgroam" chdka-emacs--env-emacs-home-org)
+                    deft-extensions '("md" "org")
+                    deft-default-extension "org"))
+            (setq deft-new-file-format "%Y%m%d-%H%M"
+                  deft-recursive t
                   )
       )
 #+end_src
