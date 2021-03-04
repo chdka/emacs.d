@@ -634,6 +634,18 @@ Add the files to the targets for refiling
 #+RESULTS:
 : confirm
 
+****** Firefox and MS Edge - install addon =Org Capture=
+This addons call the org-capture via org-protocol
+http://orgmode.org/worg/org-contrib/org-protocol.html
+
+In my configuration on Firefox and MS Edge the key is.
+
+=CTRL+SHIFT+L=
+and
+=CTRL+SHIFT+p=
+
+And activate the new style links, otherwise org-protocol complains about deprecated call.
+
 ***** Templates for =org-capture=                            :@behaviour:
 
 #+begin_src emacs-lisp
