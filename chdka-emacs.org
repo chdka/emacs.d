@@ -1,4 +1,4 @@
-Sdeft#+title: My Literate Emacs Configuration
+#+title: My Literate Emacs Configuration
 #+author: Christian Dijkstra
 #+email: chdka@public-files.de
 #+startup: noptag indent content
@@ -434,7 +434,15 @@ Therefore this code block is not tangled.
 (scroll-bar-mode 1) ;  1 = enabled
 #+end_src
 
+**** Highlight current line                                          :@ui:
+Make the currentline stand out more
 
+#+begin_src emacs-lisp
+(global-hl-line-mode t)
+#+end_src
+
+#+RESULTS:
+: t
 
 
 ** Per package
@@ -783,7 +791,8 @@ Install the modus themes of https://protesilaos.com/
     :init
     ;; Add all your customizations prior to loading the themes
     (setq modus-themes-slanted-constructs t
-          modus-themes-bold-constructs nil)
+          modus-themes-bold-constructs nil
+          modus-themes-intense-hl-line t)
 
     ;; Load the theme files before enabling a theme
     (modus-themes-load-themes)
