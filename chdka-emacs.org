@@ -90,12 +90,12 @@ This is possible since Emacs 27.1
 - [ ] CHDKA_HOME_CONFIG_EMACS
 - [ ] CHDKA_HOME_USER
   
-** FEATURE Rename large =txt= file with to other extension         :feature:
+** FIXED Rename large =txt= file to other extension                :feature:
 When using deft, it scans all files defined in =deft-extensions=.
-I'll like to include =txt= files also, due to large exports on my work system the hog and do not
+I'll like to include =txt= files also, due to large exports on my work system they hog the initial starting of deft and do not
 give knowledge, only information.
 
-- [ ] rename =txt= files to =tsv= (tab separated files)  or =csv= (comma separated files)
+- [X] rename =txt= files to =tsv= (tab separated files)  or =csv= (comma separated files)
   
 ** FEATURE Add a tangle hook for my literate configuration    :hook:feature:
 Add a =hook= when a literate confige file is saved, it gets automatically tangled.
@@ -348,8 +348,12 @@ Activate the line-numbers and columns in the buffer
 (setq-default line-number-mode t
               column-number-mode t
               scroll-conservatively 1000
-              ring-bell-function 'ignore)
+              ring-bell-function 'ignore
+              visible-bell 1)
 #+end_src
+
+#+RESULTS:
+: 1
 
 **** Set the tabs                                         :@behaviour:@ui:
 Tabs in the buffer
@@ -425,14 +429,33 @@ Settings for the cursor.
 : ignore
 
 **** DISABLED Settings for the menu-bar, tool-bar and scroll-bar     :@ui:
-Settings for the tool-bar, menu-bar and scroll-bar are already set in my early-init.el.
+Settings for the tool-bar, menu-bar and scroll-bar are already set in my [[file:early-init.el][early-init.el]].
 Therefore this code block is not tangled.
 
 #+begin_src emacs-lisp
 (tool-bar-mode -1)  ; -1 = disabled
 (menu-bar-mode  1)  ;  1 = enabled
-(scroll-bar-mode 1) ;  1 = enabled
+(scroll-bar-mode -1) ;  1 = enabled
 #+end_src
+
+#+RESULTS:
+
+**** DISABLED Maximise the initial frame                             :@ui:
+When starting Emacs I'll always maximise the frame (Window)
+
+[[https://emacsredux.com/blog/2020/12/04/maximize-the-emacs-frame-on-startup/]]
+
+This is added to my [[file:early-init.el][early-init.el]]. It did not work correctly on MS Windows.
+For windows I've to add -mm as parameter to the shortcut for runemacs.exe.
+The emacsclienttw it does not work.
+
+#+begin_src emacs-lisp
+(add-to-list 'initial-frame-alist '(fullscreen . maximised))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src
+
+#+RESULTS:
+: ((fullscreen . maximised) (vertical-scroll-bars . right))
 
 **** Highlight current line                                          :@ui:
 Make the currentline stand out more
@@ -818,7 +841,7 @@ Install the modus themes of https://protesilaos.com/
 #+RESULTS:
 : modus-themes-toggle
 
-*** Deft
+*** Deft 
 Install deft a fork of https://github.com/jrblevin/deft
 
 My default extension is =md= because I integrate this with *1Writer* on iOS.
@@ -850,8 +873,51 @@ Scan even the subdirectories of the deft folder
 #+RESULTS:
 : deft
 
+*** Elfeed - RSS feed reader in Emacs
+
+**** Elfeed =key-mappings=                                    :keymapping:
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "<f9>") 'elfeed)
+#+end_src
+
+#+RESULTS:
+: elfeed
+
+**** Install elfeed-org
+With this package it is possible to organise the feeds in an org-mode file.
+Important is the =:elfeed:= tag for the first top heading, otherwise the file is not read by elfeed.
+
+#+begin_example
+/* Blogs                                                              :elfeed:
+/** Software Development                                                 :dev:
+/*** Emacs                                                    :emacs:mustread:
+/**** http://nullprogram.com/feed
+/**** http://planet.emacsen.org/atom.xml
+#+end_example
 
 
+#+begin_src emacs-lisp
+  (use-package elfeed-org
+   :straight (:type git :host github :repo "chdka/elfeed-org")
+   :config
+     (elfeed-org)
+     (setq rmh-elfeed-org-files (list (expand-file-name "ChriszunNotities/elfeed.org" chdka-emacs--env-emacs-home-org))))
+#+end_src
 
+#+RESULTS:
+: t
 
+**** Install package =elfeed=
+This is the elfeed RSS reader of skeeto
+
+#+begin_src emacs-lisp
+  (use-package elfeed
+   :straight t
+   :bind (:map elfeed-search-mode-map)
+  )
+#+end_src
+
+#+RESULTS:
+: elfeed
 
