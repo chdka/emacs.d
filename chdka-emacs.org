@@ -844,11 +844,14 @@ Install the modus themes of https://protesilaos.com/
 *** Deft 
 Install deft a fork of https://github.com/jrblevin/deft
 
+See also: https://jingsi.space/post/2017/04/05/organizing-a-complex-directory-for-emacs-org-mode-and-deft/
+
+
 My default extension is =md= because I integrate this with *1Writer* on iOS.
 For my work situation my default extension is =org=, and ignore the =txt= extension.
 I've a lot large TXT files due to exports.
 
-Scan even the subdirectories of the deft folder
+Scan even the subdirectories of the deft folder.
 
 #+begin_src emacs-lisp
   (use-package deft
@@ -857,11 +860,11 @@ Scan even the subdirectories of the deft folder
     :commands (deft)
     :config (if chdka-emacs--const-is-own-device
                 ; it is my own device
-                (setq deft-directory  (expand-file-name "ChriszunNotities" chdka-emacs--env-emacs-home-org)
+                (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-org)
                       deft-extensions '("md" "txt" "org")
                       deft-default-extension "md") ; workaround, the default extension is not set properly
               ; it is my work device
-              (setq deft-directory  (expand-file-name "_orgroam" chdka-emacs--env-emacs-home-org)
+              (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-org)
                     deft-extensions '("md" "org")
                     deft-default-extension "org"))
             (setq deft-new-file-format "%Y%m%d-%H%M"
