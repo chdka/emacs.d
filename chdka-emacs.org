@@ -6,6 +6,7 @@
 #+todo: BUG(b) FEATURE(f) | FIXED(x)
 #+tags: @behaviour(b) @ui(u) env_var(v) keymapping(k) hook(h)
 #+tags: { issue(i) feature(f) }
+#+property: header-args :results silent
 
 * LICENSE
 I've chosen GPLv3, because most of the information and snippets I use are also licensed under GPLv3.
@@ -80,8 +81,6 @@ My agenda functionality is different for my *PERSONAL* environment vs my *WORK* 
 (getenv "CHDKA_DEVICE")
 #+end_src
 
-#+RESULTS:
-: OWN
 
 ** FEATURE Clean up some obsolete environment variables [0/2]      :env_var:
 One of those variables is =CHDKA_HOME_CONFIG_EMACS=. Now I use the =XDG_CONFIG_HOME= setting.
@@ -190,8 +189,6 @@ The naming convention is a prefix with =chdka-emacs--env-=.
 
 #+end_src
 
-#+RESULTS:
-: chdka-emacs--env-emacs-server-file
 
 *** Set constant if device is my *OWN* or *WORK*                  :env_var:
 For this purpose I've created an environment variable =CHDKA_DEVICE= which holds the following values:
@@ -205,8 +202,6 @@ For this purpose I've created an environment variable =CHDKA_DEVICE= which holds
 or if it is running on my work device")
 #+end_src
 
-#+RESULTS:
-: chdka-emacs--const-is-own-device
 
 *** Confirm before exiting                                     :@behaviour:
 
@@ -214,8 +209,6 @@ or if it is running on my work device")
 (setq-default confirm-kill-emacs 'yes-or-no-p)
 #+end_src
 
-#+RESULTS:
-: yes-or-no-p
 
 *** Set an alias to y/n                                        :@behaviour:
 Enable y/n instead of yes/no
@@ -259,10 +252,7 @@ Assign a folder for them, and use a flat structure
               `((".*" . ,chdka-emacs-const-backup-rootdir)))
 #+end_src
 
-#+RESULTS:
-: ((.* . d:/christian/.cache/emacs/backup/))
-
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 (defconst chdka-emacs-const-autosave-rootdir
           (expand-file-name (concat chdka-emacs--env-home-cache "/emacs/auto-save/"))
   "Personal Emacs auto-save root.")
@@ -274,8 +264,6 @@ Assign a folder for them, and use a flat structure
 
 #+end_src
 
-#+RESULTS:
-| .* | d:/christian/.cache/emacs/auto-save/ | t |
 
 **** Set the housekeeping for backup and auto-save            :@behaviour:
 For the backup activate some setting regarding version and age of those versions
@@ -291,8 +279,6 @@ For the backup activate some setting regarding version and age of those versions
 )
 #+end_src
 
-#+RESULTS:
-: 9
 
 Set the intervals for writing an auto-save file and the timeout.
 
@@ -303,8 +289,6 @@ Set the intervals for writing an auto-save file and the timeout.
 ) 
 #+end_src
 
-#+RESULTS:
-: 200
 
 *** Buffer settings
 **** Auto revert of the buffer                                :@behaviour:
@@ -325,6 +309,7 @@ Write the files in UTF-8 and even in UTF-8-UNIX when possible
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
+(set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8-unix)
 (when (eq system-type 'windows-nt)
   (set-clipboard-coding-system 'utf-16le-dos))
@@ -352,8 +337,6 @@ Activate the line-numbers and columns in the buffer
               visible-bell 1)
 #+end_src
 
-#+RESULTS:
-: 1
 
 **** Set the tabs                                         :@behaviour:@ui:
 Tabs in the buffer
@@ -383,15 +366,13 @@ Tabs in the buffer
 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 #+end_src
 
-#+RESULTS:
-| left-curly-arrow | right-curly-arrow |
 
 *** User Interface
 In this section default settings for the user interface
 
 **** Set the base fonts                                              :@ui:
  
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes 
 
 (defvar chdka-emacs--font-height (if (> (x-display-pixel-width) 1920)
                                      (+ 0 110)
@@ -406,7 +387,6 @@ In this section default settings for the user interface
 (set-face-attribute 'fixed-pitch nil :family "Fantasque Sans Mono" :height 1.0)
 #+end_src
 
-#+RESULTS:
 
 **** A more useful frame title, display filename                     :@ui:
 Display the filename of the active buffer in the frame title.
@@ -425,8 +405,6 @@ Settings for the cursor.
 (blink-cursor-mode 1) ; -1 = disabled
 #+end_src
 
-#+RESULTS:
-: ignore
 
 **** DISABLED Settings for the menu-bar, tool-bar and scroll-bar     :@ui:
 Settings for the tool-bar, menu-bar and scroll-bar are already set in my [[file:early-init.el][early-init.el]].
@@ -438,7 +416,6 @@ Therefore this code block is not tangled.
 (scroll-bar-mode -1) ;  1 = enabled
 #+end_src
 
-#+RESULTS:
 
 **** DISABLED Maximise the initial frame                             :@ui:
 When starting Emacs I'll always maximise the frame (Window)
@@ -454,8 +431,6 @@ The emacsclienttw it does not work.
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+end_src
 
-#+RESULTS:
-: ((fullscreen . maximised) (vertical-scroll-bars . right))
 
 **** Highlight current line                                          :@ui:
 Make the currentline stand out more
@@ -463,9 +438,6 @@ Make the currentline stand out more
 #+begin_src emacs-lisp
 (global-hl-line-mode t)
 #+end_src
-
-#+RESULTS:
-: t
 
 
 ** Per package
@@ -487,7 +459,6 @@ Set the folder for my org files, and prevent editing text which is not visible.
       )
 #+end_src
 
-#+RESULTS:
 
 **** TODO keywords and state triggers                         :@behaviour:
 
@@ -563,7 +534,7 @@ Initialize my agenda view, this is my daily worklist
 #+begin_src emacs-lisp
 (setq calendar-week-start-day     1       ; monday is 1st day of week
       org-agenda-start-on-weekday nil     ; 
-      org-agenda-span             2       ; show 2 days
+      org-agenda-span             4       ; show 4 days
       org-agenda-start-day      "-0d"
       ;; disable follow mode, use F in agenda view to follow
       org-agenda-start-with-follow-mode nil
@@ -596,8 +567,6 @@ Initialize my agenda view, this is my daily worklist
                              (expand-file-name (concat chdka-emacs--env-emacs-home-org "/GED/GED-work.org"))))
 #+end_src
 
-#+RESULTS:
-| d:/christian/Documents/MyOrg/GED/GED.org | d:/christian/Documents/MyOrg/GED/refile.org | d:/christian/Documents/MyOrg/GED/GED-work.org |
 
 ***** Work related:  Outlook 2 Orgmode                       :@behaviour:
 I've made this very simple addon on MS Outlook to 'sync' my agenda with Org-agenda.
@@ -610,7 +579,6 @@ This is only active on my work machine
   )
 #+end_src
 
-#+RESULTS:
 
 **** Org-capture and Org-Protocol
 I use org-capture and org-protocol at work for capturing information from
@@ -654,8 +622,6 @@ Add the files to the targets for refiling
 (setq org-refile-allow-creating-parent-nodes 'confirm) 
 #+end_src
 
-#+RESULTS:
-: confirm
 
 ****** Firefox and MS Edge - install addon =Org Capture=
 This addons call the org-capture via org-protocol
@@ -707,11 +673,6 @@ And activate the new style links, otherwise org-protocol complains about depreca
       )
 #+end_src
 
-#+RESULTS:
-| t | todo              | entry | (file+headline (lambda nil (concat chdka-emacs--env-emacs-home-org /GED/GED.org)) Niet Tijdgebonden) | * .T. %? |
-| i | interrupt, urgent | entry | (file+headline (lambda nil (concat chdka-emacs--env-emacs-home-org /GED/GED.org)) Niet Tijdgebonden) | * .I. %? |
-| n | next              | entry | (file+headline (lambda nil (concat chdka-emacs--env-emacs-home-org /GED/GED.org)) Niet Tijdgebonden) | * .N. %? |
-| m | meeting           | entry | (file+headline (lambda nil (concat chdka-emacs--env-emacs-home-org /GED/GED.org)) Tijdgebonden)      | * >>> %? |
 
 **** Org-mode =hooks=                                               :hook:
 
@@ -767,8 +728,6 @@ Install Ivy a completion framework
   )   
 #+end_src
 
-#+RESULTS:
-: t
 
 *** Which key                                                  :@behaviour:
 Install which-key, this packages provides a completion for the key chords.
@@ -783,8 +742,6 @@ Helpful when you forget wich key comes next.
   )
 #+end_src
 
-#+RESULTS:
-: t
 
 *** Markdown mode
 Install markdown mode of jblevins. https://jblevins.org/projects/markdown-mode/
@@ -814,8 +771,6 @@ This seems resolved.
 )
 #+end_src
 
-#+RESULTS:
-: magit-status
 
 *** Modus themes                                                      :@ui:
 Install the modus themes of https://protesilaos.com/
@@ -838,8 +793,6 @@ Install the modus themes of https://protesilaos.com/
 
 #+end_src
 
-#+RESULTS:
-: modus-themes-toggle
 
 *** Deft 
 Install deft a fork of https://github.com/jrblevin/deft
@@ -848,7 +801,9 @@ My default extension is =md= because I integrate this with *1Writer* on iOS.
 For my work situation my default extension is =org=, and ignore the =txt= extension.
 I've a lot large TXT files due to exports.
 
-Scan even the subdirectories of the deft folder
+Scan even the subdirectories of the deft folder.
+Due to redesign of my structure, the deft folder is =chdka-emacs--env-emacs-home-org=.
+Each subdirectory directly under this folder has its own repository, and is managed that way.
 
 #+begin_src emacs-lisp
   (use-package deft
@@ -857,21 +812,18 @@ Scan even the subdirectories of the deft folder
     :commands (deft)
     :config (if chdka-emacs--const-is-own-device
                 ; it is my own device
-                (setq deft-directory  (expand-file-name "ChriszunNotities" chdka-emacs--env-emacs-home-org)
-                      deft-extensions '("md" "txt" "org")
+                (setq deft-extensions '("md" "txt" "org")
                       deft-default-extension "md") ; workaround, the default extension is not set properly
               ; it is my work device
-              (setq deft-directory  (expand-file-name "_orgroam" chdka-emacs--env-emacs-home-org)
-                    deft-extensions '("md" "org")
+              (setq deft-extensions '("md" "org")
                     deft-default-extension "org"))
-            (setq deft-new-file-format "%Y%m%d-%H%M"
+            (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-org)
+                  deft-new-file-format "%Y%m%d-%H%M"
                   deft-recursive t
                   )
       )
 #+end_src
 
-#+RESULTS:
-: deft
 
 *** Elfeed - RSS feed reader in Emacs
 
@@ -881,8 +833,6 @@ Scan even the subdirectories of the deft folder
 (global-set-key (kbd "<f9>") 'elfeed)
 #+end_src
 
-#+RESULTS:
-: elfeed
 
 **** Install elfeed-org
 With this package it is possible to organise the feeds in an org-mode file.
@@ -909,8 +859,6 @@ Important is the =:elfeed:= tag for the first top heading, otherwise the file is
         (add-to-list 'rmh-elfeed-org-files (expand-file-name "W/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))))
 #+end_src
 
-#+RESULTS:
-: t
 
 **** Install package =elfeed=
 This is the elfeed RSS reader of skeeto
@@ -921,7 +869,4 @@ This is the elfeed RSS reader of skeeto
    :bind (:map elfeed-search-mode-map)
   )
 #+end_src
-
-#+RESULTS:
-: elfeed
 
