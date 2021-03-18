@@ -860,7 +860,7 @@ Important is the =:elfeed:= tag for the first top heading, otherwise the file is
      (setq rmh-elfeed-org-files '()) ; empty the list
      (when (file-exists-p (expand-file-name "76/09-elfeed-76.org" chdka-emacs--env-emacs-home-org))
         (add-to-list 'rmh-elfeed-org-files (expand-file-name "76/09-elfeed-76.org" chdka-emacs--env-emacs-home-org)))
-     (when (not chdka-emacs--const-is-own-device)
+     (when (file-exists-p (expand-file-name "W/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))
         (add-to-list 'rmh-elfeed-org-files (expand-file-name "W/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))))
 #+end_src
 
