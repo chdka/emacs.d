@@ -87,10 +87,10 @@ See [https://bitbucket.org/holgerschurig/emacsconf/src/a8b0e77a1ac071b9c9f2558ff
 	   (unless (or (string= "no" tfile)
 		       (string= "DISABLED" match_for_TODO_keyword)
 		       (not (string= "emacs-lisp" lang)))
-	     (add-to-list 'body-list (concat "\n\n;; =====\n"
+	     (cl-pushnew (concat "\n\n;; =====\n"
 					     "(message \"" (file-name-nondirectory orgfile) " @" (org-get-heading) "..\")\n\n"
-					     ";; ----\n\n"))
-	     (add-to-list 'body-list body))))
+					     ";; ----\n\n") body-list)
+	     (cl-pushnew body body-list))))
 	)
       (with-temp-file output-file
 	(insert ";; -*- lexical-binding: t -*-\n")
@@ -124,6 +124,7 @@ See [https://bitbucket.org/holgerschurig/emacsconf/src/a8b0e77a1ac071b9c9f2558ff
       (when (or (not (file-exists-p elfile))
 		(file-newer-than-file-p orgfile elfile))
 	(chdka-lc-tangle-config-file orgfile elfile)))
+    (message "_chdka-lc-load-config-file___. loading %s" elfile)
     (load elfile nil 'nomessage)))
 	 
 
