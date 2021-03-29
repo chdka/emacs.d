@@ -15,5 +15,6 @@
 bookmarks
 chdka-custom.el
 chdka-emacs.el
+chdka-nlc-emacs.elc
 /chdka-lisp/test-chdka-literate-config.el
 recentf

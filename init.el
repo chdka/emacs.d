@@ -6,7 +6,7 @@
 ;; Author: Christian Dijkstra <chdka@public-files.de>
 ;; Package-requires: ((emacs "27.1"))
 
-;; This file is part of my Emacs configuration
+;; This file is part of my personal Emacs configuration
 
 ;; This file is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -55,12 +55,23 @@
 ;; ----------------------------------
 (message "init.el @ MAIN..")
 
-(if (not (require 'chdka-literate-config nil t))
-    (message "init.el @ MAIN - 'chdka-literate-config' not found")
-  (message "init.el @ MAIN - chdka-literate-config..\n")
-  (chdka-lc-load-config-file "chdka-emacs.org")
+(setq chdka-init--use-lc nil) ; when t then load my literate config
+
+(when chdka-init--use-lc
+  ; use literate config
+  (if (not (require 'chdka-literate-config nil t))
+      (message "init.el @ MAIN - 'chdka-literate-config' not found")
+    (message "init.el @ MAIN - load chdka-literate-config..\n")
+    (chdka-lc-load-config-file "chdka-emacs.org"))
   )
 
+(when (not chdka-init--use-lc)
+  ; use the non literate config
+  (if (load (expand-file-name "chdka-nlc-emacs.el" user-emacs-directory) 'missing-ok )
+      (message "\ninit.el @ MAIN - load chdka-nlc-emacs.el succeeded\n")
+    (message "init.el @ MAIN - load chdka-nlc-emacs.el failed\n"))
+  )
+    
 
 ;; FINALIZE: turn debugging off
 ;; ----------------------------
