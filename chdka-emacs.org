@@ -2,6 +2,8 @@
 #+author: Christian Dijkstra
 #+email: chdka@public-files.de
 #+startup: noptag indent content
+#+options: ^:nil
+#+exclude_tags: noexport
 #+todo: DISABLED(d) | ENABLED(e)
 #+todo: BUG(b) FEATURE(f) | FIXED(x)
 #+tags: @behaviour(b) @ui(u) env_var(v) keymapping(k) hook(h)
@@ -816,7 +818,8 @@ Each subdirectory directly under this folder has its own repository, and is mana
 #+begin_src emacs-lisp
   (use-package deft
     :straight (:type git :host github :repo "chdka/deft")
-    :bind ("<f8>" . deft)
+    :bind (("<f8>" . deft)
+           ("C-x C-g" . deft-find-file))
     :commands (deft)
     :config
      (if chdka-emacs--const-is-own-device
@@ -830,6 +833,7 @@ Each subdirectory directly under this folder has its own repository, and is mana
                   deft-new-file-format "%Y%m%d-%H%M"
                   deft-recursive t
                   )
+          (setq deft-auto-save-interval 10.0)
           (require 'chdka-deft-plus)
           (advice-add 'deft-parse-title :around #'chdka-deft/parse-title-with-directory-prepended)
       )
