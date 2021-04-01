@@ -97,7 +97,7 @@ or if it is running on my work device")
 (message "chdka-nlc-emacs.el @Assign a backup and auto-save folder..")
 
 (defconst chdka-emacs-const-backup-rootdir
-          (expand-file-name "/emacs/backup/" chdka-emacs--env-home-cache )
+          (expand-file-name "emacs/backup/" chdka-emacs--env-home-cache )
   "Personal Emacs backup root.")
 
 (if (not (file-exists-p chdka-emacs-const-backup-rootdir))
@@ -106,7 +106,7 @@ or if it is running on my work device")
               `((".*" . ,chdka-emacs-const-backup-rootdir)))
 
 (defconst chdka-emacs-const-autosave-rootdir
-          (expand-file-name "/emacs/auto-save/" chdka-emacs--env-home-cache )
+          (expand-file-name "emacs/auto-save/" chdka-emacs--env-home-cache )
   "Personal Emacs auto-save root.")
 
 (if (not (file-exists-p chdka-emacs-const-autosave-rootdir))
@@ -324,9 +324,9 @@ or if it is running on my work device")
 
 ;; ----
 
-(setq org-agenda-files (list (expand-file-name "/GED/GED.org" chdka-emacs--env-emacs-home-org )
-                             (expand-file-name "/GED/refile.org" chdka-emacs--env-emacs-home-org )
-                             (expand-file-name "/GED/GED-work.org" chdka-emacs--env-emacs-home-org )))
+(setq org-agenda-files (list (expand-file-name "GED/GED.org" chdka-emacs--env-emacs-home-org )
+                             (expand-file-name "GED/refile.org" chdka-emacs--env-emacs-home-org )
+                             (expand-file-name "GED/GED-work.org" chdka-emacs--env-emacs-home-org )))
 
 
 ;; =====
@@ -336,7 +336,7 @@ or if it is running on my work device")
 
 (when (not chdka-emacs--const-is-own-device)
    (setq org-agenda-file-regexp "\\`\\\([^.].*\\.org\\\|[0-9]\\\{8\\\}\\\(\\.gpg\\\)?\\\)\\'")
-   (add-to-list 'org-agenda-files (expand-file-name "/_ol2orgmode/" chdka-emacs--env-emacs-home-org ))
+   (add-to-list 'org-agenda-files (expand-file-name "_ol2orgmode/" chdka-emacs--env-emacs-home-org ))
   )
 
 
@@ -378,24 +378,24 @@ or if it is running on my work device")
 
 (setq org-capture-templates
       (quote (("t" "todo" entry (file+headline
-                                 (lambda () (expand-file-name "/GED/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
+                                 (lambda () (expand-file-name "GED/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
                "* .T. %?\n") ; <-- add to my lisf of todo
               ("i" "interrupt, urgent" entry (file+headline
-                                 (lambda () (expand-file-name "/GED/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
+                                 (lambda () (expand-file-name "GED/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
                "* .I. %?\n") ; <-- add to my lisf of todo
               ("n" "next" entry (file+headline
-                                 (lambda () (expand-file-name "/GED/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
+                                 (lambda () (expand-file-name "GED/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
                "* .N. %?\n") ; <-- add to my list of todo, and start immediately
               ("m" "meeting" entry (file+headline
-                                    (lambda () (expand-file-name "/GED/GED.org" chdka-emacs--env-emacs-home-org )) "Tijdgebonden")
+                                    (lambda () (expand-file-name "GED/GED.org" chdka-emacs--env-emacs-home-org )) "Tijdgebonden")
                "* >>> %?\n %^t") ; <-- add to my list of meetings.
               
               ; https://github.com/sprig/org-capture-extension
               ("p" "protocol" entry (file+headline
-                                     (lambda () (expand-file-name "/GED/GED.org" chdka-emacs--env-emacs-home-org )) "Refile")
+                                     (lambda () (expand-file-name "GED/GED.org" chdka-emacs--env-emacs-home-org )) "Refile")
                "* .T. %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?") ; <-- add from firefox to list
               ("L" "protocol link" entry (file+headline
-                                     (lambda () (expand-file-name "/GED/GED.org" chdka-emacs--env-emacs-home-org )) "Refile")
+                                     (lambda () (expand-file-name "GED/GED.org" chdka-emacs--env-emacs-home-org )) "Refile")
                "* .T. %?%(chdka-emacs--square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n")
               )
              )
