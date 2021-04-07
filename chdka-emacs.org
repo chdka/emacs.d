@@ -566,21 +566,34 @@ Initialize my agenda view, this is my daily worklist
 
 ***** Add files to the agenda                                :@behaviour:
 
+Create an empty list, if it does not exist, add-to-list failes
+
 #+begin_src emacs-lisp
-(setq org-agenda-files (list (expand-file-name (concat chdka-emacs--env-emacs-home-org "/GED/GED.org"))
-                             (expand-file-name (concat chdka-emacs--env-emacs-home-org "/GED/refile.org"))
-                             (expand-file-name (concat chdka-emacs--env-emacs-home-org "/GED/GED-work.org"))))
+(setq org-agenda-files '()) ; empty the list
 #+end_src
 
 
-***** Work related:  Outlook 2 Orgmode                       :@behaviour:
+
+***** Work related:                           :@behaviour:
+
+Add work related files
+#+begin_src emacs-lisp
+(when (not chdka-emacs--const-is-own-device)
+  (add-to-list 'org-agenda-files (expand-file-name (concat chdka-emacs--env-emacs-home-org "/WA/GED.org")))
+  (add-to-list 'org-agenda-files (expand-file-name (concat chdka-emacs--env-emacs-home-org "/WA/refile.org")))
+  (add-to-list 'org-agenda-files (expand-file-name (concat chdka-emacs--env-emacs-home-org "/WA/GED-work.org"))))
+#+end_src
+
+
 I've made this very simple addon on MS Outlook to 'sync' my agenda with Org-agenda.
 This is only active on my work machine
 
 #+begin_src emacs-lisp
 (when (not chdka-emacs--const-is-own-device)
-   (setq org-agenda-file-regexp "\\`\\\([^.].*\\.org\\\|[0-9]\\\{8\\\}\\\(\\.gpg\\\)?\\\)\\'")
-   (add-to-list 'org-agenda-files (expand-file-name (concat chdka-emacs--env-emacs-home-org "/_ol2orgmode/")))
+   (when (file-exists-p (expand-file-name (concat chdka-emacs--env-emacs-home-org "/WA/Ol2Om-agda.org")))
+      (add-to-list 'org-agenda-files (expand-file-name (concat chdka-emacs--env-emacs-home-org "/WA/Ol2Om-agda.org"))))
+   (when (file-exists-p (expand-file-name (concat chdka-emacs--env-emacs-home-org "/WA/Ol2Om-tsks.org")))
+      (add-to-list 'org-agenda-files (expand-file-name (concat chdka-emacs--env-emacs-home-org "/WA/Ol2Om-tsks.org"))))
   )
 #+end_src
 
@@ -654,24 +667,24 @@ And activate the new style links, otherwise org-protocol complains about depreca
 
 (setq org-capture-templates
       (quote (("t" "todo" entry (file+headline
-                                 (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Niet Tijdgebonden")
+                                 (lambda () (concat chdka-emacs--env-emacs-home-org "/WA/GED.org")) "Niet Tijdgebonden")
                "* .T. %?\n") ; <-- add to my lisf of todo
               ("i" "interrupt, urgent" entry (file+headline
-                                 (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Niet Tijdgebonden")
+                                 (lambda () (concat chdka-emacs--env-emacs-home-org "/WA/GED.org")) "Niet Tijdgebonden")
                "* .I. %?\n") ; <-- add to my lisf of todo
               ("n" "next" entry (file+headline
-                                 (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Niet Tijdgebonden")
+                                 (lambda () (concat chdka-emacs--env-emacs-home-org "/WA/GED.org")) "Niet Tijdgebonden")
                "* .N. %?\n") ; <-- add to my list of todo, and start immediately
               ("m" "meeting" entry (file+headline
-                                    (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Tijdgebonden")
+                                    (lambda () (concat chdka-emacs--env-emacs-home-org "/WA/GED.org")) "Tijdgebonden")
                "* >>> %?\n %^t") ; <-- add to my list of meetings.
               
               ; https://github.com/sprig/org-capture-extension
               ("p" "protocol" entry (file+headline
-                                     (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Refile")
+                                     (lambda () (concat chdka-emacs--env-emacs-home-org "/WA/GED.org")) "Refile")
                "* .T. %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?") ; <-- add from firefox to list
               ("L" "protocol link" entry (file+headline
-                                     (lambda () (concat chdka-emacs--env-emacs-home-org "/GED/GED.org")) "Refile")
+                                     (lambda () (concat chdka-emacs--env-emacs-home-org "/WA/GED.org")) "Refile")
                "* .T. %?%(chdka-emacs--square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n")
               )
              )
@@ -869,10 +882,10 @@ Important is the =:elfeed:= tag for the first top heading, otherwise the file is
    :config
      (elfeed-org)
      (setq rmh-elfeed-org-files '()) ; empty the list
-     (when (file-exists-p (expand-file-name "76/09-elfeed-76.org" chdka-emacs--env-emacs-home-org))
-        (add-to-list 'rmh-elfeed-org-files (expand-file-name "76/09-elfeed-76.org" chdka-emacs--env-emacs-home-org)))
-     (when (file-exists-p (expand-file-name "W/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))
-        (add-to-list 'rmh-elfeed-org-files (expand-file-name "W/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))))
+     (when (file-exists-p (expand-file-name "CP/09-elfeed-76.org" chdka-emacs--env-emacs-home-org))
+        (add-to-list 'rmh-elfeed-org-files (expand-file-name "CP/09-elfeed-76.org" chdka-emacs--env-emacs-home-org)))
+     (when (file-exists-p (expand-file-name "WN/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))
+        (add-to-list 'rmh-elfeed-org-files (expand-file-name "WN/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))))
 #+end_src
 
 
