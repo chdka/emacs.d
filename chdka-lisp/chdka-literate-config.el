@@ -102,7 +102,9 @@ See [https://bitbucket.org/holgerschurig/emacsconf/src/a8b0e77a1ac071b9c9f2558ff
 	(insert ";;   host: " (system-name) "\n")
         (insert ";; =============================================================================\n\n")
         (insert (apply 'concat (reverse body-list))))
-      (message "_chdka-lc-tangle-config-file___. wrote %s" output-file))))
+      (message "_chdka-lc-tangle-config-file___. wrote %s" output-file)
+      (unload-feature 'org t)
+      )))
 
 (defun chdka-lc-load-config-file (fname)
   "Loads an elisp file or =fname.el= when a newer =fname.org= exists it will
