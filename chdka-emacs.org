@@ -776,6 +776,8 @@ gfm-mode : Git Flavoured Markdown
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown")
   )
+
+(add-hook 'markdown-mode #'visual-line-mode 1)
 #+end_src
 
 *** Magit
@@ -884,8 +886,8 @@ Important is the =:elfeed:= tag for the first top heading, otherwise the file is
      (setq rmh-elfeed-org-files '()) ; empty the list
      (when (file-exists-p (expand-file-name "CP/09-elfeed-76.org" chdka-emacs--env-emacs-home-org))
         (add-to-list 'rmh-elfeed-org-files (expand-file-name "CP/09-elfeed-76.org" chdka-emacs--env-emacs-home-org)))
-     (when (file-exists-p (expand-file-name "WN/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))
-        (add-to-list 'rmh-elfeed-org-files (expand-file-name "WN/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))))
+     (when (file-exists-p (expand-file-name "CN/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))
+        (add-to-list 'rmh-elfeed-org-files (expand-file-name "CN/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))))
 #+end_src
 
 
