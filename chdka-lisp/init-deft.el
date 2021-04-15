@@ -40,21 +40,20 @@
     :straight (:type git :host github :repo "chdka/deft")
     :bind ("<f8>" . deft)
     :commands (deft)
-    :config
-     (if chdka-emacs--const-is-own-device
+    :init
+    (setq deft-aut-save-interval 0)
+    (if chdka-emacs--const-is-own-device
                 ; it is my own device
                 (setq deft-extensions '("md" "txt" "org")
                       deft-default-extension "md") ; workaround, the default extension is not set properly
               ; it is my work device
               (setq deft-extensions '("md" "org")
                     deft-default-extension "org"))
-            (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-org)
+    (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-org)
                   deft-new-file-format "%Y%m%d-%H%M"
-                  deft-recursive t
-                  )
-          (require 'chdka-deft-plus)
-          (advice-add 'deft-parse-title :around #'chdka-deft/parse-title-with-directory-prepended)
-      )
+                  deft-recursive t)
+    (require 'chdka-deft-plus)
+    (advice-add 'deft-parse-title :around #'chdka-deft/parse-title-with-directory-prepended))
 
 
 (provide 'init-deft)

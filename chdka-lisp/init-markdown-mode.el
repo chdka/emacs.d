@@ -43,9 +43,11 @@
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown")
+  :init
+  (add-hook 'markdown-mode-hook #'visual-line-mode 1)
+  (setq markdown-command "pandoc.exe")
   )
 
-
+;;; Provide:
 (provide 'init-markdown-mode)
 ;;; init-markdown-mode.el ends here
