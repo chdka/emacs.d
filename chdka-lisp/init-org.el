@@ -6,7 +6,7 @@
 ;; Author: Christian Dijkstra <chdka@public-files.de>
 ;; URL:
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1")) ((org)) ((org-plus-contrib)) ((chdka-helper-functions))
+;; Package-Requires: ((emacs "27.1")) ((org)) ((chdka-helper-functions))
 
 ;; This file is not part of Emacs
 
@@ -33,12 +33,12 @@
 ;; configures: org-agenda; org-capture; org-protocol
 
 ;;; Code:
-;;;; Install org-plus-contrib:
+;;;; Install org
 (require 'chdka-helper-functions)
 
-(message "init-org.el @Install =org-plus-contrib=..")
+(message "init-org.el @Install =org=..")
 
-(straight-use-package 'org-plus-contrib)
+(straight-use-package 'org)
 
 
 ;;;; Init default org behaviour:
@@ -197,7 +197,7 @@
                "* .T. %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?") ; <-- add from firefox to list
               ("L" "protocol link" entry (file+headline
                                      (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Refile")
-               "* .T. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n"))))
+               "* .P. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n"))))
   (setq org-capture-templates
         (quote (("t" "todo" entry (file+headline
                                  (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
@@ -218,7 +218,7 @@
                "* .T. %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?") ; <-- add from firefox to list
               ("L" "protocol link" entry (file+headline
                                      (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Refile")
-               "* .T. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n")))))
+               "* .P. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n")))))
         
 
 
