@@ -41,7 +41,6 @@
     :bind ("<f8>" . deft)
     :commands (deft)
     :init
-    (setq deft-aut-save-interval 0)
     (if chdka-emacs--const-is-own-device
                 ; it is my own device
                 (setq deft-extensions '("md" "txt" "org")
@@ -50,8 +49,24 @@
               (setq deft-extensions '("md" "org")
                     deft-default-extension "org"))
     (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-org)
-                  deft-new-file-format "%Y%m%d-%H%M"
-                  deft-recursive t)
+          deft-new-file-format "%Y%m%d-%H%M"
+          deft-recursive t
+          deft-aut-save-interval 0
+          deft-file-limit nil)
+    (setq deft-recursive-ignore-dir-regexp
+          (concat "\\(?:"
+                  "\\."        ; current folder
+                  "\\|\\.\\."  ; up one level
+                  "\\|CA"      ; CA - personal agenda files
+                  "\\|WA"      ; WA - work agenda files
+                  "\\|beorg"
+                  "\\)$"))
+    (setq deft-strip-summary-regexp
+          (concat "\\("
+                  "[\n\t]" ;; blank
+                  "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
+                  "\\|^#\\+[[:lower:]_]+:.*$" ;; org-mode metadata lowercase
+                  "\\)"))
     (require 'chdka-deft-plus)
     (advice-add 'deft-parse-title :around #'chdka-deft/parse-title-with-directory-prepended))
 
