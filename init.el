@@ -47,8 +47,8 @@
 ;; (more important when emacsserver is used)
 (cd (expand-file-name "~"))
 
-;; ;; Pull in ./chdka-lisp/*
-;; (add-to-list 'load-path (expand-file-name "chdka-lisp" user-emacs-directory))
+;; Pull in ./chdka-lisp/*
+(add-to-list 'load-path (expand-file-name "chdka-lisp" user-emacs-directory))
 
 
 ;; MAIN: start the main configuration
