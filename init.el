@@ -1,6 +1,6 @@
 ;;; init.el --- -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021
+;; Copyright (C) 2021, 2022
 ;; Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
@@ -47,8 +47,8 @@
 ;; (more important when emacsserver is used)
 (cd (expand-file-name "~"))
 
-;; Pull in ./chdka-lisp/*
-(add-to-list 'load-path (expand-file-name "chdka-lisp" user-emacs-directory))
+;; ;; Pull in ./chdka-lisp/*
+;; (add-to-list 'load-path (expand-file-name "chdka-lisp" user-emacs-directory))
 
 
 ;; MAIN: start the main configuration
@@ -79,7 +79,7 @@
 
 ;; Startup timing results
 (message "\nStart up time %.2fs\n"
-	 (float-time (time-subtract (current-time) chdka-early-init--emacs-start-time)))
+ (float-time (time-subtract (current-time) chdka-early-init--emacs-start-time)))
 
 (setq debug-on-error nil
       debug-on-quit nil)

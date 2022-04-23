@@ -1,7 +1,7 @@
 ;;; chdka-nlc-emacs.el --- -*- lexical-binding: t -*-
 
 ;;; License:
-;; Copyright (C) 2021
+;; Copyright (C) 2021, 2022
 ;; Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
@@ -200,15 +200,15 @@ or if it is running on my work device")
 ;;; Load all the installed packages
 (message "chdka-nlc-emacs.el @Load all the installed packages..")
 
-(require 'init-modus-theme)
-(require 'init-ivy)
-(require 'init-which-key)
-(require 'init-org)
-(require 'init-deft)
-(require 'init-markdown-mode)
-(require 'init-elfeed)
-(require 'init-magit)
-(require 'init-ffip)
+;; (require 'init-modus-theme)
+;; (require 'init-ivy)
+;; (require 'init-which-key)
+;; (require 'init-org)
+;; (require 'init-deft)
+;; (require 'init-markdown-mode)
+;; (require 'init-elfeed)
+;; (require 'init-magit)
+;; (require 'init-ffip)
 
 ;;; All between these lines vvv move to separate files
 ;;; All between these lines ^^^ move to separate files

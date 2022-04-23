@@ -1,6 +1,6 @@
 ;;; early-init.el --- -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021
+;; Copyright (C) 2021, 2022
 ;; Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
@@ -42,28 +42,28 @@
 
 ;; PACKAGE CONFIGURATION: bootstrap straight.el
 ;; --------------------------------------------
-(message "early-init.el @ PACKAGE CONFIGURATION straight.el...")
+;(message "early-init.el @ PACKAGE CONFIGURATION straight.el...")
 
 ;; prevent package.el loading packages, this is handled via straight.el
 ;; and use-package
-(setq package-enable-at-startup nil)
+;(setq package-enable-at-startup nil)
 
 ;; bootstrap straight.el
-(defvar bootstrap-version)
+;(defvar bootstrap-version)
   
-(let ((bootstrap-file (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+;(let ((bootstrap-file (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+;      (bootstrap-version 5))
+;  (unless (file-exists-p bootstrap-file)
+;    (with-current-buffer
+;        (url-retrieve-synchronously
+;         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+;         'silent 'inhibit-cookies)
+;      (goto-char (point-max))
+;      (eval-print-last-sexp)))
+;  (load bootstrap-file nil 'nomessage))
 
 ;; https://github.com/raxod502/straight.el/blob/develop/README.md#integration-with-use-package
-(straight-use-package 'use-package)
+;(straight-use-package 'use-package)
 
 
 ;; GUI: Initialize some GUI elements
