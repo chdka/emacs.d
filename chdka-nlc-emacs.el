@@ -174,9 +174,9 @@ or if it is running on my work device")
 ;;;; Set the base fonts:
 (message "chdka-nlc-emacs.el @Set the base fonts..")
 
-(defvar chdka-emacs--font-height (if (> (x-display-pixel-width) 1920)
-                                     (+ 0 110)
-                                   (+ 0 90))
+(defvar chdka-emacs--font-height (if (> (x-display-pixel-height) 1080)
+                                     (+ 0 120)
+                                   (+ 0 100))
   "This variable holds the font height, which is based on my display width pixelcount")
 
 ;; Main typeface
@@ -208,6 +208,7 @@ or if it is running on my work device")
 (require 'init-markdown-mode)
 (require 'init-elfeed)
 (require 'init-magit)
+(require 'init-ffip)
 
 ;;; All between these lines vvv move to separate files
 ;;; All between these lines ^^^ move to separate files

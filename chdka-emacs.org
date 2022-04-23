@@ -374,8 +374,8 @@ In this section default settings for the user interface
  
 #+begin_src emacs-lisp :tangle yes 
 
-(defvar chdka-emacs--font-height (if (> (x-display-pixel-width) 1920)
-                                     (+ 0 110)
+(defvar chdka-emacs--font-height (if (> (x-display-pixel-height) 1080)
+                                     (+ 0 100)
                                    (+ 0 90))
    "This variable holds the font height, which is based on my display width and pixelcount")
 

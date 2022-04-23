@@ -8,7 +8,7 @@
 /fonts/*
 /ico/*
 /url/*
-
+/eln-cache/*
 
 # Exclude files
 *~
