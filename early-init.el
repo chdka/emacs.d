@@ -32,8 +32,8 @@
 ;; ---------------------------------------------------------
 (message "early-init.el @ STARTUP..")
 
-(setq debug-on-error t
-      debug-on-quit t)
+(setq debug-on-error nil
+      debug-on-quit nil)
 
 ;; Startup timing
 (defvar chdka-early-init--emacs-start-time (current-time)
