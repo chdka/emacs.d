@@ -1,10 +1,10 @@
 ;;; init.el --- -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021, 2022
+;; Copyright (C) 2021-2023
 ;; Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
-;; Package-requires: ((emacs "27.1"))
+;; Package-requires: ((emacs > "27.1"))
 
 ;; This file is part of my personal Emacs configuration
 
@@ -37,6 +37,32 @@
 	       (message "\ninit.el @ STARTUP - load early-init.el succeeded\n")
 	     (message "init.el @ STARTUP - load early-init.el failed\n")))
   (message "init.el @ STARTUP - early-init.el already loaded..."))
+
+
+;; PACKAGEMANAGEMENT: set repos and ensure use-package is installed
+;; ----------------------------------------------------------------
+(message "init.el @ PACKAGEMANAGEMENT..")
+
+(setq package-archives '(("melpa" . "http://melpa.org/packages/")
+                         ("gnu". "http://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+;;(setq package-gnupghome-dir (expand-file-name "elpa/gnupg" user-emacs-directory))
+
+;; ensure use-package is installed
+(condition-case nil
+    (require 'use-package)
+  (file-error
+   (require 'package)
+   (package-initialize)
+   (package-refresh-contents)
+   (package-install 'use-package)
+   (setq use-package-always-ensure t)
+   (require 'use-package)))
+
+;; customization in its own file
+(setq-default custom-file (expand-file-name "chdka-custom.el" user-emacs-directory))
+(load custom-file 'noerror)
 
 
 ;; PATH DEFAULTS: set some default loading paths and current dir
@@ -73,17 +99,13 @@
   )
     
 
-;; FINALIZE: turn debugging off
+;; FINALIZE:
 ;; ----------------------------
 (message "init.el @ FINALIZE..")
 
 ;; Startup timing results
 (message "\nStart up time %.2fs\n"
- (float-time (time-subtract (current-time) chdka-early-init--emacs-start-time)))
-
-(setq debug-on-error nil
-      debug-on-quit nil)
-
+ (float-time (time-subtract after-init-time before-init-time)))
 
 ;; END:
 ;; ----

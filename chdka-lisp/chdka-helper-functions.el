@@ -1,7 +1,7 @@
 ;;; chdka-helper-functions.el --- -*- lexical-binding: t -*-
 
 ;;; License:
-;; Copyright (C) 2021
+;; Copyright (C) 2021-2023
 ;; Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
@@ -41,6 +41,14 @@
 ref: https://github.com/sprig/org-capture-extension"
   (concat
   (mapcar #'(lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform))
+  )
+
+
+(defun chdka-hf-generate-toc ()
+  " Generate a TOC for a file for quick navigation, mostly is use this in markdown files
+ref: https://gitlab.com/skybert/my-little-friends/-/blob/master/emacs/.emacs"
+  (interactive)
+  (occur "^#+ [0-9a-zA-Z]+")
   )
 
 ;;;; Provide

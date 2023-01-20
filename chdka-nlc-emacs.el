@@ -1,7 +1,7 @@
 ;;; chdka-nlc-emacs.el --- -*- lexical-binding: t -*-
 
 ;;; License:
-;; Copyright (C) 2021, 2022
+;; Copyright (C) 2021-2023
 ;; Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
@@ -25,7 +25,8 @@
 ;;; Description:
 
 ;; This file defines my non literate configuration.
-;; It loads my selected packages using straight.el and use-package
+;; It loads my selected packages use-package
+
 
 ;;; Code:
 ;;;; Set file and path constants based on environment variables:
@@ -45,9 +46,6 @@
 
 (defconst chdka-emacs--env-home-config (expand-file-name (getenv "CHDKA_HOME_CONFIG"))
    "This path is my equivalent of XDG_CONFIG_HOME")
-
-(defconst chdka-emacs--env-home-config-emacs (expand-file-name (getenv "CHDKA_HOME_CONFIG_EMACS"))
-   "This path points to the location where my emacs configuration is stored [DEPRECATED]")
 
 (defconst chdka-emacs--env-home-data (expand-file-name (getenv "CHDKA_HOME_DATA"))
    "This path points to the location where my data is stored e.g. FireFox profile")
@@ -88,13 +86,11 @@ or if it is running on my work device")
 
 (setq-default confirm-kill-emacs 'yes-or-no-p)
 
-(setq-default custom-file (expand-file-name "chdka-custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file t))
 
+;;;; Reading and writing files
+(message "chdka-nlc-emacs.el @Reading and writing files..")
 
-;;;; Assign a backup and auto-save folder and set the housekeeping:
-(message "chdka-nlc-emacs.el @Assign a backup and auto-save folder..")
+(setq large-file-warning-threshold 150000000)
 
 (defconst chdka-emacs-const-backup-rootdir
           (expand-file-name "emacs/backup/" chdka-emacs--env-home-cache )
@@ -144,19 +140,16 @@ or if it is running on my work device")
               visible-bell 1)
 (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
 
+;; Disable bidirectional text to prevent "trojan source" exploits
+;;  see https://www.trojansource.codes/
+(setf (default-value 'bidi-display-reordering) nil)
+
 
 ;;;; Set the preferred encoding to UTF-8-UNIX when possible:
 ;; See reference: https://stackoverflow.com/questions/1674481/how-to-configure-gnu-emacs-to-write-unix-or-dos-formatted-files-by-default
 (prefer-coding-system 'utf-8-unix)
 (when (eq system-type 'windows-nt)
   (set-clipboard-coding-system 'utf-16le-dos))
-
-
-;;;; Performance issue on MS Windows when pasting unicode text:
-;; Sometimes when you paste unicode text in Emacs it responds very slow
-;; See reference: https://emacs.stackexchange.com/questions/33510/unicode-txt-slowness
-(when (eq system-type 'windows-nt)
-  (setq inhibit-compacting-font-caches t))
 
 
 ;;;; Set tabs in the buffer:
@@ -175,9 +168,9 @@ or if it is running on my work device")
 (message "chdka-nlc-emacs.el @Set the base fonts..")
 
 (defvar chdka-emacs--font-height (if (> (x-display-pixel-height) 1080)
-                                     (+ 0 120)
-                                   (+ 0 100))
-  "This variable holds the font height, which is based on my display width pixelcount")
+                                     (+ 0 100)
+                                   (+ 0 90))
+   "This variable holds the font height, which is based on my display width and pixelcount")
 
 ;; Main typeface
 (set-face-attribute 'default nil :family "Fantasque Sans Mono" :height chdka-emacs--font-height)

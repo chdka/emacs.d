@@ -1,10 +1,10 @@
 ;;; early-init.el --- -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021, 2022
+;; Copyright (C) 2021-2023
 ;; Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
-;; Package-requires: ((emacs "27.1"))
+;; Package-requires: ((emacs > "27.1"))
 
 ;; This file is part of my Emacs configuration
 
@@ -28,42 +28,13 @@
 
 ;;; Code:
 
-;; STARTUP: set some debugging and initialize some variables
-;; ---------------------------------------------------------
+;;; STARTUP: initialize some variables
+;;  ----------------------------------
 (message "early-init.el @ STARTUP..")
 
-(setq debug-on-error nil
-      debug-on-quit nil)
-
-;; Startup timing
-(defvar chdka-early-init--emacs-start-time (current-time)
-  "Time when Emacs was started")
-
-
-;; PACKAGE CONFIGURATION: bootstrap straight.el
-;; --------------------------------------------
-;(message "early-init.el @ PACKAGE CONFIGURATION straight.el...")
-
-;; prevent package.el loading packages, this is handled via straight.el
-;; and use-package
-;(setq package-enable-at-startup nil)
-
-;; bootstrap straight.el
-;(defvar bootstrap-version)
-  
-;(let ((bootstrap-file (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-;      (bootstrap-version 5))
-;  (unless (file-exists-p bootstrap-file)
-;    (with-current-buffer
-;        (url-retrieve-synchronously
-;         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-;         'silent 'inhibit-cookies)
-;      (goto-char (point-max))
-;      (eval-print-last-sexp)))
-;  (load bootstrap-file nil 'nomessage))
-
-;; https://github.com/raxod502/straight.el/blob/develop/README.md#integration-with-use-package
-;(straight-use-package 'use-package)
+;; Garbage collection
+;; Increase the GC for faster startup
+(setq gc-cons-threshold (* 50 1000 1000))
 
 
 ;; GUI: Initialize some GUI elements
@@ -79,6 +50,10 @@
 (scroll-bar-mode -1)
 (setq inhibit-splash-screen t)
 
+;; https://www.reddit.com/r/emacs/comments/8v4v7o/why_is_emacs_so_slow_on_windows/
+;; sometime with pasting unicode text emacs responds very slow.
+;; https://emacs.stackexchange.com/questions/33510/unicode-txt-slowness
+(setq inhibit-compacting-font-caches t)
 
 
 ;; END: 

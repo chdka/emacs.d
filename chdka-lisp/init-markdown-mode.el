@@ -1,6 +1,6 @@
 ;;; init-markdown-mode.el --- -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021, 2022  Christian Dijkstra <chdka@public-files.de>
+;; Copyright (C) 2021-2023  Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
 ;; URL:
@@ -36,21 +36,14 @@
 
 ;; ----
 
-(add-to-list 'load-path "~/.config/emacs/package-repos/markdown-mode/")
-
-(autoload 'markdown-mode "markdown-mode"
-  "Major mode for editing Markdown files"t)
-
-(add-to-list 'auto-mode-alist
-             '("\\.\\(?:md\\)\\'" . markdown-mode))
-
-(autoload 'gfm-mode "markdown-mode"
-  "Major mode for editing Github Flavored Markdown files" t)
-(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
-
-(add-hook 'markdown-mode-hook #'visual-line-mode 1)
-(setq markdown-command "pandoc.exe")
-
-;;; Provide:
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.\\(?:md\\)\\'" . markdown-mode))
+  :config (add-hook 'markdown-mode-hook #'visual-line-mode 1)
+  :init (setq markdown-command "pandoc.exe")
+  )
+ 
 (provide 'init-markdown-mode)
 ;;; init-markdown-mode.el ends here
