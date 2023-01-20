@@ -37,14 +37,13 @@
 ;; ----
 
 (use-package ivy
-  :straight t
+  :ensure t
   :demand
   :config
   ;; add recent files to the switch-buffer
   ;; current and total # in prompt
   (setq ivy-use-virtual-buffers t
         ivy-count-format "[%d/%d] ")
-  
   ;; enable ivy-mode
   (ivy-mode 1)
   )   

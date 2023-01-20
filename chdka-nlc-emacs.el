@@ -193,13 +193,13 @@ or if it is running on my work device")
 ;;; Load all the installed packages
 (message "chdka-nlc-emacs.el @Load all the installed packages..")
 
-;; (require 'init-modus-theme)
-;; (require 'init-ivy)
-;; (require 'init-which-key)
+(require 'init-modus-theme)
+(require 'init-ivy)
+(require 'init-which-key)
 ;; (require 'init-org)
 (require 'init-deft)
 (require 'init-markdown-mode)
-;; (require 'init-elfeed)
+(require 'init-elfeed)
 (require 'init-magit)
 ;; (require 'init-ffip)
 

@@ -1,6 +1,6 @@
 ;;; init-modus-theme.el --- -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021  Christian Dijkstra <chdka@public-files.de>
+;; Copyright (C) 2021-2023  Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
 ;; URL:
@@ -36,21 +36,17 @@
 
 ;; ----
 
-  (use-package modus-themes
-    :straight t
-    :init
-    ;; Add all your customizations prior to loading the themes
-    (setq modus-themes-slanted-constructs t
-          modus-themes-bold-constructs nil
-          modus-themes-intense-hl-line t)
-
-    ;; Load the theme files before enabling a theme
-    (modus-themes-load-themes)
-    :config
-    ;; Load the theme of your choice:
-    (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
-    :bind ("<f5>" . modus-themes-toggle))
-
+(use-package modus-themes
+  :ensure t
+  :demand t
+  :config
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs nil
+        modus-themes-intense-hl-line t)
+  ;; Load the theme of your choice:
+  (load-theme 'modus-operandi) ;; OR (modus-vivendi)
+  :bind ("<f5>" . modus-themes-toggle))
 
 (provide 'init-modus-theme)
 ;;; init-modus-theme.el ends here

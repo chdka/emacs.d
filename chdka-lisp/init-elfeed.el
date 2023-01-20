@@ -32,27 +32,21 @@
 
 ;;; Code:
 ;; =====
-(message "init-elfeed.el @Elfeed =key-mappings= :keymapping:..")
-
-;; ----
-
-(global-set-key (kbd "<f9>") 'elfeed)
-
-
-;; =====
 (message "init-elfeed.el @Install elfeed-org..")
 
 ;; ----
 
-  (use-package elfeed-org
-   :straight (:type git :host github :repo "chdka/elfeed-org")
-   :config
+(use-package elfeed-org
+  :ensure t
+  :config
      (elfeed-org)
      (setq rmh-elfeed-org-files '()) ; empty the list
      (when (file-exists-p (expand-file-name "CP/09-elfeed-76.org" chdka-emacs--env-emacs-home-org))
         (add-to-list 'rmh-elfeed-org-files (expand-file-name "CP/09-elfeed-76.org" chdka-emacs--env-emacs-home-org)))
      (when (file-exists-p (expand-file-name "CN/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))
-        (add-to-list 'rmh-elfeed-org-files (expand-file-name "CN/09-elfeed-w.org" chdka-emacs--env-emacs-home-org))))
+       (add-to-list 'rmh-elfeed-org-files (expand-file-name "CN/09-elfeed-w.org" chdka-emacs--env-emacs-home-org)))
+   :bind ("<f9>" . elfeed)
+     )
 
 
 ;; =====
@@ -61,7 +55,7 @@
 ;; ----
 
   (use-package elfeed
-   :straight t
+   :ensure t
    :bind (:map elfeed-search-mode-map)
   )
 

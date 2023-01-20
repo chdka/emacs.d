@@ -1,6 +1,6 @@
 ;;; init-which-key.el --- -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021  Christian Dijkstra <chdka@public-files.de>
+;; Copyright (C) 2021-23  Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
 ;; URL:
@@ -37,7 +37,7 @@
 ;; ----
 
 (use-package which-key
-  :straight t
+  :ensure t
   :demand t
   :config
   (which-key-mode)
