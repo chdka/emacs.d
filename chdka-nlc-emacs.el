@@ -200,7 +200,7 @@ or if it is running on my work device")
 (require 'init-deft)
 (require 'init-markdown-mode)
 ;; (require 'init-elfeed)
-;; (require 'init-magit)
+(require 'init-magit)
 ;; (require 'init-ffip)
 
 ;;; All between these lines vvv move to separate files
