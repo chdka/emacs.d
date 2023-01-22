@@ -32,11 +32,11 @@
 
 ;;; Code:
 ;; =====
-(message "init-ffip.el ..")
+(message "init-ffip.el .. nothing done")
 
-(straight-use-package 'find-file-in-project)
+;; (straight-use-package 'find-file-in-project)
 
-(when (eq system-type 'windows-nt) (setq ffip-find-executable "d:/MSYS2-64/usr/bin/find.exe"))
+;; (when (eq system-type 'windows-nt) (setq ffip-find-executable "d:/MSYS2-64/usr/bin/find.exe"))
 
 ;; ----
 
