@@ -43,12 +43,28 @@
 ;; ----------------------------------------------------------------
 (message "init.el @ PACKAGEMANAGEMENT..")
 
+;; Be sure when using the MSYS2 environment to install the gnupg package
+;; for the MSYS2 environment u are using
+;; e.g:
+;; $ pacman -S $MINGW_PACKAGE_PREFIX-gnupg
+;; or check if it is install
+;; $ pacman -Qs $MINGW_PACKAGE_PREFIX-gnupg
+;; local/mingw-w64-ucrt-x86_64-gnupg 2.3.8-1
+;;   GNU Privacy Guard - a PGP replacement tool (mingw-w64)
+;;
+;;  the error message is described in this thread
+;; https://lists.gnu.org/archive/html/bug-gnu-emacs/2021-05/msg01295.html
+;;
+;; how to check
+;; $ where gpg
+;; C:\MSYS2-64\ucrt64\bin\gpg.exe 
+;; C:\MSYS2-64\usr\bin\gpg.exe
+
+
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ("gnu". "https://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-
-;;(setq package-gnupghome-dir (expand-file-name "elpa/gnupg" user-emacs-directory))
 
 ;; ensure use-package is installed
 (condition-case nil
