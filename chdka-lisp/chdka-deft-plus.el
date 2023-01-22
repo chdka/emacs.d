@@ -5,7 +5,7 @@
 ;; Author: Christian Dijkstra <chdka@public-files.de>
 ;; URL:
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1")) ((deft))
+;; Package-Requires: ((emacs "27.1") (deft))
 
 ;; This file is not part of Emacs
 
@@ -67,6 +67,7 @@
               (chdka-deft/parse-title-from-front-matter-data
                (car (split-string (substring str 4) "\n---\n")))
             (apply orig args)))))))
+
 
 (provide 'chdka-deft-plus)
 ;;; chdka-deft-plus.el ends here
