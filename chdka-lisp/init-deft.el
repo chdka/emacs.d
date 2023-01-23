@@ -46,7 +46,7 @@
               (setq deft-extensions '("md" "org")
                     deft-default-extension "org"))
 
-            (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-org)
+            (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-notes)
                   deft-new-file-format "%Y%m%d-%H%M"
                   deft-recursive t
                   deft-aut-save-interval 0

@@ -35,8 +35,12 @@
 (defconst chdka-emacs--env-device (getenv "CHDKA_DEVICE")
    "Indicates if this device is my own device or work")
 
-(defconst chdka-emacs--env-emacs-home-beorg (expand-file-name (getenv "CHDKA_APP_EMACS_HOME_BEORG"))
-   "This the path to my files used via the iOS app Beorg")
+;; obsolete ??
+;;(defconst chdka-emacs--env-emacs-home-beorg (expand-file-name (getenv "CHDKA_APP_EMACS_HOME_BEORG"))
+;;  "This the path to my files used via the iOS app Beorg")
+
+(defconst chdka-emacs--env-emacs-home-notes (expand-file-name (getenv "CHDKA_APP_EMACS_HOME_NOTES"))
+  "This is the path tom my notes folder where i store mynotes")
 
 (defconst chdka-emacs--env-emacs-home-org (expand-file-name (getenv "CHDKA_APP_EMACS_HOME_ORG"))
    "This is the path to my folder where i store my org files")
