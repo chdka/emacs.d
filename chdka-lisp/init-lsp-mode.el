@@ -68,19 +68,16 @@
 (message "init-lsp-mode.el - install lsp-mode..")
 
 (use-package lsp-mode
-  :disabled t                           ; 
-  :straight t                           ; 
-  :demand                               ; 
-  :after
-  :custom                               ; 
-  :custom-face                          ; 
-  :bind                                 ; 
-  :init                                 ; 
-                                        ; 
-  :config                               ; 
-                                        ; 
-  )
-
+  :disabled
+  :ensure t
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (python-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
 ;; -----------------------------------------------------------------------------
 ;; =============================================================================
 
