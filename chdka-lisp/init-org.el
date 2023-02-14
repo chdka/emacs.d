@@ -112,7 +112,8 @@
         org-agenda-span             4       ; show 4 days
         org-agenda-start-day      "-0d"
         org-agenda-start-with-follow-mode nil
-        org-agenda-todo-ignore-with-date nil)
+        org-agenda-todo-ignore-with-date nil
+        org-agenda-sort-notime-is-late nil)
 
   (setq org-agenda-custom-commands
         '(("n" "Agenda / .I. / .P. / .N. / .W."
