@@ -140,13 +140,6 @@
    (when (file-exists-p (expand-file-name "WA/refile-wrk.org" chdka-emacs--env-emacs-home-org))
      (add-to-list 'org-agenda-files (expand-file-name "WA/refile-wrk.org" chdka-emacs--env-emacs-home-org)))
 
-   ;; in my notes folder, this for better integration in my notes
-   (when (file-exists-p (expand-file-name "GED-notes.org" chdka-emacs--env-emacs-home-notes))
-     (add-to-list 'org-agenda-files (expand-file-name "GED-notes.org" chdka-emacs--env-emacs-home-notes)))
-   (when (file-exists-p (expand-file-name "refile-notes.org" chdka-emacs--env-emacs-home-notes))
-     (add-to-list 'org-agenda-files (expand-file-name "refile-notes.org" chdka-emacs--env-emacs-home-notes)))
-
-   
    (setq chdka--writable-targets org-agenda-files)
 
    ;; my work outlook 2 org mode files, these files are read-only and thus can not used as a refile target
