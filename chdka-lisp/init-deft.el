@@ -43,8 +43,8 @@
                 (setq deft-extensions '("md" "txt" "org")
                       deft-default-extension "md") ; workaround, the default extension is not set properly
                                         ; it is my work device
-              (setq deft-extensions '("md" "org")
-                    deft-default-extension "org"))
+              (setq deft-extensions '("md" "txt" "org")
+                    deft-default-extension "md"))
 
             (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-notes)
                   deft-new-file-format "%Y%m%d-%H%M"
