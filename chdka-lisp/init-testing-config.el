@@ -68,18 +68,6 @@
 
 (message " !!!!    init-testing-config.el - install testing-config..")
 
-(use-package package-to-test
-  :disabled                             ; 
-  :demand                               ; 
-  :after
-  :custom                               ; 
-  :custom-face                          ; 
-  :bind                                 ; 
-  :init                                 ; 
-                                        ; 
-  :config                               ; 
-                                        ; 
-  )
 
 ;; -----------------------------------------------------------------------------
 ;; =============================================================================

@@ -1,12 +1,11 @@
-;;; init-org.el --- -*- lexical-binding: t -*-
+;;; init-personal-knowledge-management.el -*- lexical-binding: t; -*-
 
-;;; License:
 ;; Copyright (C) 2021-2023  Christian Dijkstra <chdka@public-files.de>
 
 ;; Author: Christian Dijkstra <chdka@public-files.de>
 ;; URL:
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1")) ((org)) ((chdka-helper-functions))
+;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is not part of Emacs
 
@@ -23,20 +22,61 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-;; Except otherwise noted. For example, I derive some functions from
-;; Holger Schurig which are licensed under GPLv2.
-;; [http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html]
-
 ;;; Description:
 
-;; This package installs org with personal settings
-;; configures: org-agenda; org-capture; org-protocol
+;;  This configuration incorporates my settings for my personal
+;;  knowledge system
+;;  Currently this consists of the following packages:
+;;  - org    - for agenda and capture todo's
+;;  - denote - for quickly writing uniform files and filenames
+;;  - deft   - for navigating reasonable quit through my notes
+
+
+;;; Keyword for the use-package are
+;;  :disabled                             ; the use-package statement is not executed
+;;                                        ; makes it possible to temporary disable the package
+;;  :if                                   ; conditional loading of the package
+;;  :demand                               ; force the loading of the package
+;;  :commands
+;;  :mode
+;;  :interpreter
+;;  :magic
+;;  :hook                                 ; define hooks 
+;;  :requires
+;;  :load-path
+;;  :after
+;;  :defines                              ; create dummy variables
+;;  :functions                            ; and functions
+;;  :custom                               ; customization of an package
+;;  :custom-face                          ; define the font face
+;; ;;; :defer t                           ; postpone the loading of the package
+;;                                        ; with straight.el this is not needed
+;;  :bind                                 ; define keybindings
+;;  :init                                 ; this sections is executed before loading
+;;                                        ; of the package
+;;  :config                               ; this section is executed after loading
+;;                                        ; the package
+;;  :diminish
+;;  :delight
+;;  :no-require t
+;;  :preface
+;;  :pin
+;;  :ensure-system-package
+
+;;; see for all keywords
+;;  https://github.com/jwiegley/use-package
+;;  and others
+
+;; -----------------------------------------------------------------------------
+;; =============================================================================
 
 ;;; Code:
-;;;; Install org
+
+(message "    init-personal-knowledge-management.el - init-org..")
+
 (require 'chdka-helper-functions)
 
-(message "init-org.el @Install =org=..")
+(message "    init-personal-knowledge-management.el - install/config org-mode..")
 
 (use-package org
   :pin org
@@ -46,7 +86,7 @@
   (add-hook 'org-agenda-mode-hook 'chdka-hf-nowrap-and-truncate-line)
   :bind 
   (("C-c l" . org-store-link)
-   ("C-c a"  . org-agenda)
+   ("C-c a" . org-agenda)
    ("C-c c" . org-capture)
    ("C-c b" . org-switchb)
    ("C-c '" . org-edit-src-code)
@@ -144,10 +184,10 @@
    (when (file-exists-p (expand-file-name "WA/Ol2Om-agda.org" chdka-emacs--env-emacs-home-org))
      (add-to-list 'org-agenda-files (expand-file-name "WA/Ol2Om-agda.org" chdka-emacs--env-emacs-home-org)))
    (when (file-exists-p (expand-file-name "WA/Ol2Om-tsks.org" chdka-emacs--env-emacs-home-org))
-     (add-to-list 'org-agenda-files (expand-file-name "WA/Ol2Om-tsks.org" chdka-emacs--env-emacs-home-org)))
+     (add-to-list 'org-agenda-files (expand-file-name "WA/Ol2Om-tsks.org" chdka-emacs--env-emacs-home-org))))
 
 ;;;; Initialize org-protocol:
-(message "init-org.el @Activate =org-protocol= :@behaviour:.."))
+(message "    init-personal-knowledge-management.el - install/config org-protocol..")
 
 (use-package org-protocol
   :requires org
@@ -205,6 +245,74 @@
                                               (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Refile")
                    "* .P. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n"))))))
 
-;;; Provide
-(provide 'init-org)
-;;; init-org.el ends here
+
+;; -----------------------------------------------------------------------------
+(message "    init-personal-knowledge-management.el - install deft..")
+
+(use-package deft
+  :ensure t
+  :bind
+  (("<f7>"   . deft)
+   ("S-<f7>" . deft-refresh)) ; after creating a note via denote a refresh is needed
+  :commands
+  (deft)
+  :config
+  (if chdka-emacs--const-is-own-device
+                                        ; it is my own device
+      (setq deft-extensions '("md" "txt" "org")
+            deft-default-extension "md"); workaround, the default extension is not set properly
+                                        ; it is my work device
+    (setq deft-extensions '("md" "org")
+          deft-default-extension "md"))
+  (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-notes)
+        deft-new-file-format chdka-emacs--datetime-format
+        deft-recursive t
+        deft-aut-save-interval 0
+        deft-file-limit nil)
+  (setq deft-recursive-ignore-dir-regexp
+        (concat "\\(?:"
+                "\\."        ; current folder
+                "\\|\\.\\."  ; up one level
+                "\\)$"))
+  (setq deft-strip-summary-regexp
+        (concat "\\("
+                "[\n\t]" ;; blank
+                "\\|^#\\+[[:upper:]_]+:.*$" ;; org-mode metadata
+                "\\|^#\\+[[:lower:]_]+:.*$" ;; org-mode metadata lowercase
+                ;; "\\|^---[\n\t]\\(.*[\n\t]\\)+\\.\\.\\.$" ;; deactivated due to performance impact
+                ;; "\\|^\\:PROPERTIES\\:[\n\t]\\(.*[\n\t]\\)+\\:END\\:$" ;; deactivated due to performance impact
+                "\\)"))
+  
+  (require 'chdka-deft-plus)
+  (advice-add 'deft-parse-title :around #'chdka-deft/parse-title-with-directory-prepended))
+
+
+;;------------------------------------------------------------------------------
+(message "    init-personal-knowledge-management.el - install denote..")
+
+(use-package denote
+  :ensure t
+  :bind
+  (("<f8>" . denote)
+   ("M-<f8>" . denote-add-front-matter)
+   ("C-<f8>" . denote-rename-file-using-front-matter))
+  :config
+  (setq denote-id-format chdka-emacs--datetime-format
+        denote-id-regexp chdka-emacs--datetime-regexp
+        denote-yaml-front-matter (concat "---\n"
+                                         "title:      %s\n"
+                                         "date:       %s\n"
+                                         "tags:       %s\n"
+                                         "identifier: %S\n"
+                                         "...\n\n"
+                                         )
+        denote-directory  (expand-file-name "notes" chdka-emacs--env-emacs-home-notes)
+        denote-file-type 'markdown-yaml))
+
+
+
+;; -----------------------------------------------------------------------------
+;; =============================================================================
+
+(provide 'init-personal-knowledge-management)
+;;; init-personal-knowledge-management.el ends here
