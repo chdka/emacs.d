@@ -267,7 +267,7 @@
   (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-notes)
         deft-new-file-format chdka-emacs--datetime-format
         deft-recursive t
-        deft-aut-save-interval 0
+        deft-auto-save-interval 0
         deft-file-limit nil)
   (setq deft-recursive-ignore-dir-regexp
         (concat "\\(?:"
