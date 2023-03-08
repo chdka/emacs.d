@@ -184,7 +184,22 @@
    (when (file-exists-p (expand-file-name "WA/Ol2Om-agda.org" chdka-emacs--env-emacs-home-org))
      (add-to-list 'org-agenda-files (expand-file-name "WA/Ol2Om-agda.org" chdka-emacs--env-emacs-home-org)))
    (when (file-exists-p (expand-file-name "WA/Ol2Om-tsks.org" chdka-emacs--env-emacs-home-org))
-     (add-to-list 'org-agenda-files (expand-file-name "WA/Ol2Om-tsks.org" chdka-emacs--env-emacs-home-org))))
+     (add-to-list 'org-agenda-files (expand-file-name "WA/Ol2Om-tsks.org" chdka-emacs--env-emacs-home-org)))
+
+
+   ;; Auto refresh org-agenda, my agenda org files getting refreshed from outside emacs.
+   ;; to reflect changes in the org-agenda view a 'cron-like job' is created
+   ;; https://emacs.stackexchange.com/questions/16326/how-to-rebuild-agenda-buffers-when-saving-an-org-mode-buffer
+   (defun chdka-org-redo-all-agenda-buffers ()
+     (interactive)
+     (dolist (buffer (buffer-list))
+       (with-current-buffer buffer
+         (when (derived-mode-p 'org-agenda-mode)
+           (org-agenda-redo t)))))
+   (run-with-timer 0 (* 6 60) 'chdka-org-redo-all-agenda-buffers)
+
+   ;; end of org-mode use-package
+   )
 
 ;;;; Initialize org-protocol:
 (message "    init-personal-knowledge-management.el - install/config org-protocol..")
