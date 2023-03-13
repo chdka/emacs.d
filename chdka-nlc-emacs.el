@@ -181,7 +181,7 @@ or if it is running on my work device")
 ;;;; Set the base fonts:
 (message "chdka-nlc-emacs.el @Set the base fonts..")
 
-(defvar chdka-emacs--font-height (if (> (x-display-pixel-height) 1080)
+(defvar chdka-emacs--font-height (if (> (x-display-pixel-width) 2559)
                                      (+ 0 100)
                                    (+ 0 90))
    "This variable holds the font height, which is based on my display width and pixelcount")
