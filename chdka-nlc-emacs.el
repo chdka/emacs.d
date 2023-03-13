@@ -29,6 +29,17 @@
 
 
 ;;; Code:
+;;;; Set some constants used throughout my configuration
+(message "chdka-nlc-emacs.el @Set constants..")
+
+(defconst chdka-emacs--datetime-format "%Y%m%dT%H%M"
+  "Defines a format string for date stamps.
+!! Important Note: When this const is changed, change also chdka-emacs--datetime-regexp")
+
+(defconst chdka-emacs--datetime-regexp "\\([0-9]\\{8\\}\\)\\(T[0-9]\\{4\\}\\)"
+  "Defines the regexp string to find dates.
+!! Important Note: When this const is changed, change also chdka-emacs--datetime-format.")
+
 ;;;; Set file and path constants based on environment variables:
 (message "chdka-nlc-emacs.el @Set file and path constants based on environment variables..")
 
@@ -44,6 +55,9 @@
 
 (defconst chdka-emacs--env-emacs-home-org (expand-file-name (getenv "CHDKA_APP_EMACS_HOME_ORG"))
    "This is the path to my folder where i store my org files")
+
+(defconst chdka-emacs--env-emacs-home-notes (expand-file-name (getenv "CHDKA_APP_EMACS_HOME_NOTES"))
+   "This is the path to my folder where i store my note files")
 
 (defconst chdka-emacs--env-home-cache (expand-file-name (getenv "CHDKA_HOME_CACHE"))
    "This path is my equivalent of XDG_CACHE_HOME")
@@ -117,9 +131,9 @@ or if it is running on my work device")
 
 (message "chdka-nlc-emacs.el @..housekeeping for backup and auto-save")
 
-(setq-default make-backup-files t    ; backup of a file the first time it is saved
-              backup-by-copying t
-              version-control t      ; version numbers for backup files
+(setq-default make-backup-files nil    ; backup of a file the first time it is saved
+              backup-by-copying nil
+              version-control nil      ; version numbers for backup files
               delete-old-versions t  ; delete old versions silently
               delete-by-moving-to-trash t
               kept-old-versions 6    ; oldest version to keep
@@ -171,7 +185,7 @@ or if it is running on my work device")
 ;;;; Set the base fonts:
 (message "chdka-nlc-emacs.el @Set the base fonts..")
 
-(defvar chdka-emacs--font-height (if (> (x-display-pixel-height) 1080)
+(defvar chdka-emacs--font-height (if (> (x-display-pixel-width) 2559)
                                      (+ 0 100)
                                    (+ 0 90))
    "This variable holds the font height, which is based on my display width and pixelcount")
@@ -200,11 +214,13 @@ or if it is running on my work device")
 (require 'init-modus-theme)
 (require 'init-ivy)
 (require 'init-which-key)
-(require 'init-org)
-(require 'init-deft)
+(require 'init-personal-knowledge-management)
+;;(require 'init-org)
+;;(require 'init-deft)
 (require 'init-markdown-mode)
 (require 'init-elfeed)
 (require 'init-magit)
+;;(require 'init-testing-config)
 ;; (require 'init-ffip)
 
 ;;; All between these lines vvv move to separate files

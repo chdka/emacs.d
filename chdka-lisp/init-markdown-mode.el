@@ -36,13 +36,22 @@
 
 ;; ----
 
+(require 'chdka-helper-functions)
+
 (use-package markdown-mode
   :ensure t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.\\(?:md\\)\\'" . markdown-mode))
-  :config (add-hook 'markdown-mode-hook #'visual-line-mode 1)
-  :init (setq markdown-command "pandoc.exe")
+  :bind
+  (("<f6>" . chdka-hf-generate-toc))
+  :commands
+  (markdown-mode gfm-mode)
+  :mode
+  (("README\\.md\\'" . gfm-mode)
+   ("\\.\\(?:md\\)\\'" . markdown-mode))
+  :config
+  (add-hook 'markdown-mode-hook #'visual-line-mode 1)
+  (setq markdown-regex-yaml-metadata-border "\\(\\.\\{3\\}\\|-\\{3\\}\\)$")
+  :init
+  (setq markdown-command "pandoc.exe")
   )
  
 (provide 'init-markdown-mode)
