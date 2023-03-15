@@ -283,7 +283,7 @@
                                         ; it is my work device
     (setq deft-extensions '("md" "org")
           deft-default-extension "md"))
-  (setq deft-directory  (expand-file-name chdka-emacs--env-emacs-home-notes)
+  (setq deft-directory  (expand-file-name "notes" chdka-emacs--env-emacs-home-notes)
         deft-new-file-format chdka-emacs--datetime-format
         deft-recursive t
         deft-auto-save-interval 0
@@ -314,10 +314,14 @@
   :bind
   (("<f8>" . denote)
    ("M-<f8>" . denote-add-front-matter)
-   ("C-<f8>" . denote-rename-file-using-front-matter))
+   ("C-<f8>" . denote-rename-file-using-front-matter)
+   ("S-<f8>" . chdka-denote-pick-silo-then-command))
   :config
   (setq denote-id-format chdka-emacs--datetime-format
         denote-id-regexp chdka-emacs--datetime-regexp
+        ;; when ! and $ are allowed as keyword characters those must not be excluded
+        denote-excluded-punctuation-regexp "[][{}@#%^&*()=+'\"?,.|;:~`‘’“”/]*"
+        denote-keywords-regexp "__\\([[:alnum:][:nonascii:]_-!\\$]*\\)"
         denote-yaml-front-matter (concat "---\n"
                                          "title:      %s\n"
                                          "date:       %s\n"
@@ -327,6 +331,43 @@
                                          )
         denote-directory  (expand-file-name "notes" chdka-emacs--env-emacs-home-notes)
         denote-file-type 'markdown-yaml))
+
+;; https://protesilaos.com/emacs/denote
+(defvar chdka-denote-silo-directories
+  `(,(expand-file-name "notes/an" chdka-emacs--env-emacs-home-notes)
+    ,(expand-file-name "notes/pn" chdka-emacs--env-emacs-home-notes)
+    ,(expand-file-name "notes/pn/personen" chdka-emacs--env-emacs-home-notes)
+    ,(expand-file-name "notes/wn" chdka-emacs--env-emacs-home-notes)
+    ;; You don't actually need to include the `denote-directory' here
+    ;; if you use the regular commands in their global context.  I am
+    ;; including it for completeness.
+    ;; ,denote-directory
+    )
+  "List of file paths pointing to my Denote silos.
+This is a list of strings.")
+
+(defvar chdka-denote-commands-for-silos
+  '(denote
+    denote-date
+    denote-subdirectory
+    denote-template
+    denote-type)
+  "List of Denote commands to call after selecting a silo.
+This is a list of symbols that specify the note-creating
+interactive functions that Denote provides.")
+
+
+(defun chdka-denote-pick-silo-then-command (silo command)
+  "Select SILO and run Denote COMMAND in it.
+SILO is a file path from `chdka-denote-silo-directories', while
+COMMAND is one among `chdka-denote-commands-for-silos'."
+  (interactive
+   (list (completing-read "Select a silo: " chdka-denote-silo-directories nil t)
+         (intern (completing-read
+                  "Run command in silo: "
+                  chdka-denote-commands-for-silos nil t))))
+  (let ((denote-directory silo))
+    (call-interactively command)))
 
 
 
