@@ -287,7 +287,8 @@
         deft-new-file-format chdka-emacs--datetime-format
         deft-recursive t
         deft-auto-save-interval 0
-        deft-file-limit nil)
+        deft-file-limit nil
+        deft-current-sort-method 'title)
   (setq deft-recursive-ignore-dir-regexp
         (concat "\\(?:"
                 "\\."        ; current folder
