@@ -50,6 +50,9 @@
   :config
   (add-hook 'markdown-mode-hook #'visual-line-mode 1)
   (setq markdown-regex-yaml-metadata-border "\\(\\.\\{3\\}\\|-\\{3\\}\\)$")
+  (setq markdown-wiki-link-alias-first nil
+        markdown-enable-wiki-links t
+        markdown-wiki-link-search-type 'project)
   :init
   (setq markdown-command "pandoc.exe")
   )
