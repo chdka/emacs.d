@@ -79,6 +79,7 @@
 (message "    init-personal-knowledge-management.el - install/config org-mode..")
 
 (use-package org
+  :ensure t
   :pin org
   :init
   (add-hook 'org-mode-hook #'visual-line-mode 1)
@@ -211,10 +212,9 @@
   :config
   (setq org-refile-targets '((nil :maxlevel . 4)
                              (chdka--writable-targets :maxlevel . 4)))
-
   (setq org-refile-use-outline-path 'file
-         org-outline-path-complete-in-steps nil
-         org-refile-allow-creating-parent-nodes 'confirm)
+        org-outline-path-complete-in-steps nil
+        org-refile-allow-creating-parent-nodes 'confirm)
 
   (if chdka-emacs--const-is-own-device
       (setq org-capture-templates
@@ -242,7 +242,7 @@
     (setq org-capture-templates
           (quote (("t" "todo" entry (file+headline
                                      (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
-                   "* .P. %?\n") ; <-- add to my lisf of todo
+                   "* .T. %?\n %a") ; <-- add to my lisf of todo
                   ("i" "interrupt, urgent" entry (file+headline
                                                   (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
                    "* .I. %?\n") ; <-- add to my lisf of todo
@@ -259,7 +259,9 @@
                    "* .T. %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?") ; <-- add from firefox to list
                   ("L" "protocol link" entry (file+headline
                                               (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Refile")
-                   "* .P. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n"))))))
+                   "* .P. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n")))))
+
+)
 
 
 ;; -----------------------------------------------------------------------------
