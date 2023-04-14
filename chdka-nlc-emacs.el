@@ -85,13 +85,12 @@
 
 ;;;; Set constant if device is my *OWN*:
 ;; This is used for conditional settings
-(message "chdka-nlc-emacs.el @Set constant if device is my *OWN*..")
-
 (defconst chdka-emacs--const-is-own-device
   (string-suffix-p "OWN" chdka-emacs--env-device t)
   "This pseudo constant indicates if my current configuration is running on my personal device,
 or if it is running on my work device")
 
+(message "chdka-nlc-emacs.el @Set constant if device is my *OWN* : %s .." chdka-emacs--const-is-own-device)
 
 ;;;; Set some behaviour settings:
 (message "chdka-nlc-emacs.el @Set some behaviour settings..")
