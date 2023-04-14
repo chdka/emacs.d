@@ -200,69 +200,63 @@
            (org-agenda-redo t)))))
    (run-with-timer 0 (* 6 60) 'chdka-org-redo-all-agenda-buffers)
 
+   ;;;; Initialize org-protocol:
+   (message "    init-personal-knowledge-management.el - capture templates..")
+
+   (setq org-refile-targets '((nil :maxlevel . 4)
+                              (chdka--writable-targets :maxlevel . 4)))
+
+   (setq org-refile-use-outline-path 'file
+         org-outline-path-complete-in-steps nil
+         org-refile-allow-creating-parent-nodes 'confirm)
+
+   (if chdka-emacs--const-is-own-device
+       (setq org-capture-templates
+             (quote (("t" "todo" entry (file+headline
+                                        (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
+                      "* .T. %?\n") ; <-- add to my lisf of todo
+                     ("i" "interrupt, urgent" entry (file+headline
+                                        (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
+                      "* .I. %?\n") ; <-- add to my lisf of todo
+                     ("n" "next" entry (file+headline
+                                       (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
+                      "* .N. %?\n") ; <-- add to my list of todo, and start immediately
+                     ("m" "meeting" entry (file+headline
+                                       (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Tijdgebonden")
+                      "* >>> %?\n %^t") ; <-- add to my list of meetings.
+
+                                        ; https://github.com/sprig/org-capture-extension
+                     ("p" "protocol" entry (file+headline
+                                       (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Refile")
+                      "* .T. %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?") ; <-- add from firefox to list
+                     ("L" "protocol link" entry (file+headline
+                                       (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Refile")
+                      "* .P. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n"))))
+     (setq org-capture-templates
+           (quote (("t" "todo" entry (file+headline
+                                      (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
+                    "* .T. %?\n %a") ; <-- add to my lisf of todo
+                   ("i" "interrupt, urgent" entry (file+headline
+                                     (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
+                    "* .I. %?\n") ; <-- add to my lisf of todo
+                   ("n" "next" entry (file+headline
+                                     (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
+                    "* .N. %?\n") ; <-- add to my list of todo, and start immediately
+                   ("m" "meeting" entry (file+headline
+                                     (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Tijdgebonden")
+                    "* >>> %?\n %^t") ; <-- add to my list of meetings.
+
+                                        ; https://github.com/sprig/org-capture-extension
+                   ("p" "protocol" entry (file+headline
+                                     (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Refile")
+                    "* .T. %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?") ; <-- add from firefox to list
+                   ("L" "protocol link" entry (file+headline
+                                     (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Refile")
+                    "* .P. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n")))))
+
    ;; end of org-mode use-package
-   )
-
-;;;; Initialize org-protocol:
-(message "    init-personal-knowledge-management.el - install/config org-protocol..")
-
-(use-package org-protocol
-  :requires org
-  :pin org
-  :config
-  (setq org-refile-targets '((nil :maxlevel . 4)
-                             (chdka--writable-targets :maxlevel . 4)))
-
-  (setq org-refile-use-outline-path 'file
-        org-outline-path-complete-in-steps nil
-        org-refile-allow-creating-parent-nodes 'confirm)
-
-  (if chdka-emacs--const-is-own-device
-      (setq org-capture-templates
-            (quote (("t" "todo" entry (file+headline
-                                       (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
-                     "* .T. %?\n") ; <-- add to my lisf of todo
-                    ("i" "interrupt, urgent" entry (file+headline
-                                                    (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
-                     "* .I. %?\n") ; <-- add to my lisf of todo
-                    ("n" "next" entry (file+headline
-                                       (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
-                     "* .N. %?\n") ; <-- add to my list of todo, and start immediately
-                    ("m" "meeting" entry (file+headline
-                                          (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Tijdgebonden")
-                     "* >>> %?\n %^t") ; <-- add to my list of meetings.
-
-                                        ; https://github.com/sprig/org-capture-extension
-                    ("p" "protocol" entry (file+headline
-                                           (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Refile")
-                     "* .T. %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?") ; <-- add from firefox to list
-                    ("L" "protocol link" entry (file+headline
-                                                (lambda () (expand-file-name "CA/GED.org" chdka-emacs--env-emacs-home-org )) "Refile")
-                     "* .P. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n"))))
-
-    (setq org-capture-templates
-          (quote (("t" "todo" entry (file+headline
-                                     (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
-                   "* .T. %?\n %a") ; <-- add to my lisf of todo
-                  ("i" "interrupt, urgent" entry (file+headline
-                                                  (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
-                   "* .I. %?\n") ; <-- add to my lisf of todo
-                  ("n" "next" entry (file+headline
-                                     (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Niet Tijdgebonden")
-                   "* .N. %?\n") ; <-- add to my list of todo, and start immediately
-                  ("m" "meeting" entry (file+headline
-                                        (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Tijdgebonden")
-                   "* >>> %?\n %^t") ; <-- add to my list of meetings.
-
-                                        ; https://github.com/sprig/org-capture-extension
-                  ("p" "protocol" entry (file+headline
-                                         (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Refile")
-                   "* .T. %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?") ; <-- add from firefox to list
-                  ("L" "protocol link" entry (file+headline
-                                              (lambda () (expand-file-name "WA/GED-wrk.org" chdka-emacs--env-emacs-home-org )) "Refile")
-                   "* .P. %?%(chdka-hf-square-brackets-to-round-ones \"%:description\") \n\nCaptured On: %U\n\nAantekeningen: \n")))))
-
 )
+
 
 
 ;; -----------------------------------------------------------------------------
